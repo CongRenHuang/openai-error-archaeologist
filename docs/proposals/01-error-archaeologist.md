@@ -146,7 +146,7 @@
 - `insufficient_evidence`:影像/推導不足或 `input_uncertainty` → abstain,說明缺什麼
 - 不顯示任何數值信心;數值校準列 roadmap(需 calibration set)。
 
-**GPT-5.6 運用深度(Build Week 評分①)**:多模態手寫理解(非 OCR 流水線,懂步驟間推導關係)× 溯因推理(從錯誤結果反推候選規則)× structured output(固定 schema 可聚合、可 eval)× **鑑別實驗生成**(含預測推導與自我檢核)× abstain 機制。「假說—證據—實驗—收斂」是完整推理迴圈,不是單發 prompt。
+**Codex + GPT-5.6 運用深度(Build Week 評分①,官方措辭聚焦 Codex 協作深度)**:多模態手寫理解(非 OCR 流水線,懂步驟間推導關係)× 溯因推理(從錯誤結果反推候選規則)× structured output(固定 schema 可聚合、可 eval)× **鑑別實驗生成**(含預測推導與自我檢核)× abstain 機制。「假說—證據—實驗—收斂」是完整推理迴圈,不是單發 prompt。開發面:全程以 Codex agentic workflow 建置 pipeline、eval harness 與 UI,README 記錄協作過程(對映評分①)。
 
 ## 5. 可重用性:框架與 AI 解耦(原則 02)
 
@@ -286,6 +286,8 @@
 | P1   | 盲測集 30–36 份(含 CAT 2–4;獨立標註封存 + 外部老師盲標 holdout)+ 4 場訪談(並行,PM 負責)                 | 7/14–19 |
 | P2   | 模板化對症練習(時間允許才做)                                                                            | 7/19    |
 | —    | 7/19 晚 feature freeze;7/20 demo 影片 + Devpost + README;7/21 12:00 PDT 提交                            | 7/20–21 |
+
+**全程紀律**:每日 commit + 保留 Codex session logs——同時滿足 New & Existing 條款的期間內工作證據(repo 於 7/13 前已存在,僅含 planning docs)與 `/feedback` Codex Session ID 提交要求。
 
 資源配置:60% 產品與可靠 demo、20% 盲測與 eval、10% 訪談、10% 學者 review 與 Devpost 文案。學者聯絡 24 小時無回覆即停止追逐——不讓 credential hunt 延誤產品。
 
