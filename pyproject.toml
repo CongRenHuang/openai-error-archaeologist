@@ -1,0 +1,24 @@
+[project]
+name = "error-archaeologist"
+version = "0.1.0"
+description = "Evidence-linked math error diagnosis demo"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+  "fastapi>=0.116,<1",
+  "openai>=1.97,<2",
+  "pydantic-settings>=2.10,<3",
+  "sqlalchemy>=2.0,<3",
+  "sympy>=1.14,<2",
+  "uvicorn[standard]>=0.35,<1",
+]
+
+[dependency-groups]
+dev = [
+  "httpx>=0.28,<1",
+  "pillow>=11,<12",
+  "pytest>=8.4,<9",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["backend/tests"]
+pythonpath = ["."]

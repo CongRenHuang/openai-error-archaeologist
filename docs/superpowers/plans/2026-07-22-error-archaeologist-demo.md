@@ -56,7 +56,7 @@ README.md                            judge setup, architecture, Codex record
 **Interfaces:**
 - Produces: `uv run pytest`, `npm run build`, `Settings`, and ignored local `.env`/SQLite files.
 
-- [ ] **Step 1: Add secret-safe environment files**
+- [x] **Step 1: Add secret-safe environment files**
 
 ```gitignore
 .env
@@ -77,7 +77,7 @@ MODEL_ADAPTER=openai
 DATABASE_URL=sqlite:///./demo.db
 ```
 
-- [ ] **Step 2: Add Python project with exact runtime dependencies**
+- [x] **Step 2: Add Python project with exact runtime dependencies**
 
 ```toml
 [project]
@@ -101,19 +101,19 @@ testpaths = ["backend/tests"]
 pythonpath = ["."]
 ```
 
-- [ ] **Step 3: Add minimal Vite package and proxy configuration**
+- [x] **Step 3: Add minimal Vite package and proxy configuration**
 
 ```json
 {
   "scripts": {"dev": "vite", "build": "tsc -b && vite build"},
-  "dependencies": {"@vitejs/plugin-react": "latest", "vite": "latest", "typescript": "latest", "react": "latest", "react-dom": "latest"},
-  "devDependencies": {"@types/react": "latest", "@types/react-dom": "latest"}
+  "dependencies": {"react": "^19.2.8", "react-dom": "^19.2.8"},
+  "devDependencies": {"@vitejs/plugin-react": "^6.0.3", "vite": "^8.1.5", "typescript": "^7.0.2", "@types/react": "^19.2.17", "@types/react-dom": "^19.2.3"}
 }
 ```
 
 `vite.config.ts` must use `plugins: [react()]`, proxy `/api` to `http://localhost:8000`, and output to `dist`.
 
-- [ ] **Step 4: Resolve environments and verify imports**
+- [x] **Step 4: Resolve environments and verify imports**
 
 Run:
 
@@ -125,7 +125,7 @@ UV_CACHE_DIR=/private/tmp/open-ai-build-week-uv-cache uv run python -c "import f
 
 Expected: all commands exit `0`; `uv.lock` and `frontend/package-lock.json` exist.
 
-- [ ] **Step 5: Commit scaffold only**
+- [x] **Step 5: Commit scaffold only**
 
 ```bash
 git add .gitignore .env.example pyproject.toml uv.lock frontend backend/app
@@ -142,7 +142,7 @@ git commit -m "build: scaffold demo application"
 **Interfaces:**
 - Produces: `AnalysisResult`, `Probe`, `Candidate`, `EvidenceUpdate`, `verify_probe(result)`, and `match_response(result, response)`.
 
-- [ ] **Step 1: Write failing verifier tests**
+- [x] **Step 1: Write failing verifier tests**
 
 ```python
 def test_probe_predictions_must_differ(analysis_result):
@@ -158,13 +158,13 @@ def test_unmatched_response_abstains(analysis_result):
     assert match_response(analysis_result, "banana").status == "abstained"
 ```
 
-- [ ] **Step 2: Run tests and confirm missing-module failure**
+- [x] **Step 2: Run tests and confirm missing-module failure**
 
 Run: `uv run pytest backend/tests/test_verifier.py -v`
 
 Expected: FAIL because `backend.app.domain.verifier` does not exist.
 
-- [ ] **Step 3: Implement typed contracts and SymPy verification**
+- [x] **Step 3: Implement typed contracts and SymPy verification**
 
 Use Pydantic literals for `status`; candidates contain `id`, `label`, `evidence_step`, and `predicted_answer`. `verify_probe` must sympify correct/predicted answers and require every prediction to differ from correct and each other. `match_response` uses symbolic equivalence and returns abstention for parse failure or no match.
 
@@ -179,7 +179,7 @@ def equivalent(left: str, right: str) -> bool:
         return False
 ```
 
-- [ ] **Step 4: Generate three repository-owned PNG fixtures**
+- [x] **Step 4: Generate three repository-owned PNG fixtures**
 
 `generate_samples.py` uses Pillow with a bundled/system handwritten-style font when present and a default font fallback. It writes fixed 1200x800 white PNGs containing only algebra work. `fixtures.py` returns stable IDs `negative-distribution`, `first-term-only`, and `ambiguous-input` with public `/samples/<id>.png` URLs.
 
@@ -187,7 +187,7 @@ Run: `uv run python backend/scripts/generate_samples.py`
 
 Expected: three PNG files exist and Pillow can reopen each.
 
-- [ ] **Step 5: Run focused tests and commit**
+- [x] **Step 5: Run focused tests and commit**
 
 Run: `uv run pytest backend/tests/test_verifier.py backend/tests/test_fixtures.py -v`
 
@@ -208,7 +208,7 @@ git commit -m "feat: add verified algebra fixtures"
 - Consumes: contracts/verifier from Task 2.
 - Produces: three HTTP endpoints and `ModelAdapter.analyze(sample_path) -> AnalysisResult`.
 
-- [ ] **Step 1: Write failing API tests with fake adapter**
+- [x] **Step 1: Write failing API tests with fake adapter**
 
 ```python
 def test_complete_demo_flow(client):
@@ -225,13 +225,13 @@ def test_ambiguous_sample_abstains(client):
     assert response.json()["result"]["status"] == "abstained"
 ```
 
-- [ ] **Step 2: Run tests and confirm app-import failure**
+- [x] **Step 2: Run tests and confirm app-import failure**
 
 Run: `uv run pytest backend/tests/test_api.py backend/tests/test_service.py -v`
 
 Expected: FAIL because `backend.app.main` does not exist.
 
-- [ ] **Step 3: Implement adapters and orchestration**
+- [x] **Step 3: Implement adapters and orchestration**
 
 `FakeModelAdapter` returns fixed valid results and abstains for `ambiguous-input`. `OpenAIModelAdapter` base64-encodes PNG and calls:
 
@@ -251,11 +251,11 @@ response = client.responses.parse(
 
 It detects refusals/missing parsed output and never logs content. `AnalysisService` makes at most two attempts; it saves valid or abstained results and converts repeated verification failure to abstention.
 
-- [ ] **Step 4: Implement disposable repository and endpoints**
+- [x] **Step 4: Implement disposable repository and endpoints**
 
 SQLAlchemy table stores UUID, sample ID, and serialized `AnalysisResult`. `create_all` runs at startup. Unknown sample returns `400`; missing analysis returns `400` with `RESET_REQUIRED`; adapter failure returns `503` with correlation ID. Mount sample images at `/samples`; mount React `dist` only when directory exists.
 
-- [ ] **Step 5: Run backend suite and commit**
+- [x] **Step 5: Run backend suite and commit**
 
 Run: `MODEL_ADAPTER=fake uv run pytest backend/tests -v`
 
@@ -275,25 +275,25 @@ git commit -m "feat(api): add diagnosis workflow"
 - Consumes: three Task 3 endpoints.
 - Produces: selection → analysis → probe → evidence-update UI.
 
-- [ ] **Step 1: Define exact TypeScript API contracts**
+- [x] **Step 1: Define exact TypeScript API contracts**
 
 Mirror Pydantic fields for `Sample`, `Candidate`, `Probe`, `AnalysisResult`, and `EvidenceUpdate`. Use discriminated `status` unions so abstention and error states render explicitly.
 
-- [ ] **Step 2: Implement one-component flow**
+- [x] **Step 2: Implement one-component flow**
 
 `App.tsx` loads samples on mount, posts selected sample, renders evidence/candidate cards and verified badge, posts probe response, and offers Reset. Buttons disable while requests run. Errors show correlation ID when present. No router, dashboard, settings, upload, review, or aggregate.
 
-- [ ] **Step 3: Add responsive visual system**
+- [x] **Step 3: Add responsive visual system**
 
 Use warm paper background, dark ink text, restrained rust accent, serif display face with system sans body, visible focus states, and mobile single-column layout. Include copy: “Hypothesis, not verdict”, “Verified with symbolic algebra”, and “System abstained” only in matching states.
 
-- [ ] **Step 4: Build and manually inspect**
+- [x] **Step 4: Build and inspect served HTTP flow**
 
 Run: `npm --prefix frontend run build`
 
-Expected: TypeScript exits `0`; `frontend/dist/index.html` exists.
+Expected: TypeScript exits `0`; `frontend/dist/index.html` exists. Browser automation was unavailable in this environment, so human visual inspection remains part of H4 rehearsal.
 
-- [ ] **Step 5: Commit frontend**
+- [x] **Step 5: Commit frontend**
 
 ```bash
 git add frontend
@@ -309,7 +309,7 @@ git commit -m "feat(ui): add diagnostic demo flow"
 **Interfaces:**
 - Produces: one local command, one Cloud Run image, judge testing instructions.
 
-- [ ] **Step 1: Add multi-stage container**
+- [x] **Step 1: Add multi-stage container**
 
 Node stage runs `npm ci` and `npm run build`. Python stage uses `python:3.13-slim`, copies uv binary from `ghcr.io/astral-sh/uv:0.11.15`, runs `uv sync --frozen --no-dev`, copies backend and frontend dist, then starts:
 
@@ -319,7 +319,7 @@ CMD ["sh", "-c", "uv run uvicorn backend.app.main:app --host 0.0.0.0 --port ${PO
 
 Compose exposes `8000`, mounts `demo-data:/data`, and sets defaults through `${NAME:-default}` interpolation so fake mode needs no `.env`. Live mode uses `docker compose --env-file .env up`; SQLite URL is `sqlite:////data/demo.db`.
 
-- [ ] **Step 2: Verify fake-mode container before any live call**
+- [x] **Step 2: Verify fake-mode container before any live call**
 
 Run: `MODEL_ADAPTER=fake docker compose up --build`
 
@@ -329,11 +329,11 @@ Expected: `GET http://localhost:8000/api/v1/samples` returns three samples; full
 
 Human creates `.env` locally with `OPENAI_API_KEY` and confirms API usage. Run one curated analysis only. Expected: structured diagnosis or explicit actionable failure; never expose key/output in command logs.
 
-- [ ] **Step 4: Update judge documentation**
+- [x] **Step 4: Update judge documentation**
 
 README must include product story, video-link insertion during H4, `docker compose up --build`, fake-test command, live-key requirement, three-endpoint architecture, synthetic-data limitation, SQLite reset behavior, Codex collaboration, dated commit history, and Devpost testing steps. AGENTS commands must match actual scaffold.
 
-- [ ] **Step 5: Run final local gate**
+- [x] **Step 5: Run final local gate**
 
 ```bash
 uv run pytest backend/tests -v
