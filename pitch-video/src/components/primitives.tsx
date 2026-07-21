@@ -11,6 +11,25 @@ export const fadeUp = (frame: number, fps: number, delay = 0) => {
   };
 };
 
+// Wraps a scene so it fades up from / down to the composition background at its
+// edges. `dur` is the SEQUENCE length (useVideoConfig gives the whole comp, not
+// the sequence) so the tail fade lands on this scene's last frames. Combined with
+// the inter-scene gap in Video.tsx this turns hard cuts into soft transitions.
+export const SceneTransition: React.FC<{ dur: number; fade?: number; children: React.ReactNode }> = ({
+  dur,
+  fade = 14,
+  children,
+}) => {
+  const frame = useCurrentFrame();
+  const opacity = interpolate(
+    frame,
+    [0, fade, dur - fade, dur],
+    [0, 1, 1, 0],
+    { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
+  );
+  return <div style={{ position: "absolute", inset: 0, opacity }}>{children}</div>;
+};
+
 export const SceneShell: React.FC<{
   children: React.ReactNode;
   pad?: number;

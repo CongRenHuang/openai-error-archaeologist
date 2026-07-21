@@ -15,25 +15,28 @@ import { COLORS, FONT, SCENES } from "../theme";
 //
 // Local-frame timeline (1500 total):
 //   0    parse + highlight step 2
-//   150  algebra verifier stamps first invalid transition
-//   300  two candidate cards appear (both fit — tension)
-//   540  probe question generated
-//   760  predictions diverge on the two cards  <- the fork
-//   980  student writes -4b-12; card A lights, B dims; evidence bar shifts
-//   1180 teacher review + key line
+// Thresholds locked to the 50s VO beats (frames @30fps):
+//   0     parse + highlight step 2 ("the model reads the handwriting")
+//   210   algebra verifier stamps first invalid transition ("deterministic checker")
+//   600   two candidate cards appear ("taxonomy proposes two explanations")
+//   780   probe question generated ("generates one follow-up probe")
+//   990   predictions diverge on the two cards ("predict different answers") <- the fork
+//   1230  student writes -4b-12; card A lights, B dims ("the student answers")
+//   1230+ evidence bar swings ("the evidence moves")
+//   1440  teacher review + key line ("the teacher decides")
 export const Scene3: React.FC = () => {
   const frame = useCurrentFrame();
   const stage =
-    frame < 150 ? 0 : frame < 300 ? 1 : frame < 540 ? 2 : frame < 760 ? 3 : frame < 980 ? 4 : 5;
+    frame < 221 ? 0 : frame < 633 ? 1 : frame < 823 ? 2 : frame < 1044 ? 3 : frame < 1297 ? 4 : 5;
 
-  const showVerifier = frame >= 150;
-  const showCandidates = frame >= 300;
-  const showProbe = frame >= 540;
-  const showPredictions = frame >= 760;
-  const resolved = frame >= 980;
+  const showVerifier = frame >= 221;
+  const showCandidates = frame >= 633;
+  const showProbe = frame >= 823;
+  const showPredictions = frame >= 1044;
+  const resolved = frame >= 1297;
 
   // Evidence bar: 50/50 until resolution, then swings to candidate A (violet).
-  const leftPct = interpolate(frame, [980, 1080], [50, 88], {
+  const leftPct = interpolate(frame, [1297, 1456], [50, 88], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
@@ -74,19 +77,19 @@ export const Scene3: React.FC = () => {
           {showCandidates ? (
             <div style={{ display: "flex", gap: 32 }}>
               <CandidateCard
-                id="NEG_DIST"
-                label="Negative sign not distributed to 2nd term"
-                evidence="step 2"
+                id="SIGN_MISCONCEPTION"
+                label="Systematic sign error (−×− read as −)"
+                evidence="step 2 · -3·-2 → -6"
                 accent={COLORS.violet}
                 prediction={showPredictions ? "-4b - 12" : undefined}
                 state={resolved ? "lit" : "neutral"}
               />
               <CandidateCard
-                id="DIST_FIRST_ONLY"
-                label="Distributes to first term only"
-                evidence="step 2"
+                id="ONE_OFF_SLIP"
+                label="A one-off slip — not systematic"
+                evidence="step 2 · would self-correct"
                 accent={COLORS.amber}
-                prediction={showPredictions ? "-4b - 3" : undefined}
+                prediction={showPredictions ? "-4b + 12" : undefined}
                 state={resolved ? "dim" : "neutral"}
               />
             </div>
@@ -111,7 +114,7 @@ export const Scene3: React.FC = () => {
         </div>
       </div>
 
-      {frame >= 1180 ? (
+      {frame >= 1476 ? (
         <div style={{ marginTop: 40, fontSize: 34, fontWeight: 700 }}>
           Model proposes · mathematics verifies · <span style={{ color: COLORS.teal }}>teacher decides</span>
         </div>

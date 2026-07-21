@@ -1,5 +1,5 @@
 import React from "react";
-import { useCurrentFrame, useVideoConfig } from "remotion";
+import { Img, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { SceneShell, fadeUp } from "../components/primitives";
 import { COLORS, FONT } from "../theme";
 
@@ -10,9 +10,10 @@ const ledger = [
   "Remote US educator research",
 ];
 
-// 2:35–2:55 — Why this team / close. Rigor + CTA.
-// liveUrl is a swappable prop: placeholder until deployment is tested.
-export const Scene7Close: React.FC<{ liveUrl?: string }> = ({ liveUrl = "deploy pending — URL after tested" }) => {
+const LIVE_URL = "https://error-archaeologist-hs2orfr2la-de.a.run.app/";
+
+// 2:45–2:58 — Why this team / close. Rigor + live CTA with scannable QR.
+export const Scene7Close: React.FC<{ liveUrl?: string }> = ({ liveUrl = LIVE_URL }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   return (
@@ -23,7 +24,7 @@ export const Scene7Close: React.FC<{ liveUrl?: string }> = ({ liveUrl = "deploy 
       <div style={{ ...fadeUp(frame, fps, 15), fontSize: 52, fontWeight: 800, marginTop: 16, maxWidth: 1300 }}>
         Designed in Taiwan from traceable US public evidence.
       </div>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 16, marginTop: 36 }}>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 16, marginTop: 32 }}>
         {ledger.map((l, i) => (
           <div
             key={l}
@@ -41,12 +42,28 @@ export const Scene7Close: React.FC<{ liveUrl?: string }> = ({ liveUrl = "deploy 
           </div>
         ))}
       </div>
-      <div style={{ ...fadeUp(frame, fps, 130), marginTop: 56, fontSize: 40, fontWeight: 700, maxWidth: 1300, lineHeight: 1.25 }}>
+      <div style={{ ...fadeUp(frame, fps, 150), marginTop: 44, fontSize: 38, fontWeight: 700, maxWidth: 1300, lineHeight: 1.25 }}>
         AI should not declare <i>why</i> a student is wrong. It should show evidence and ask a
         question capable of <span style={{ color: COLORS.teal }}>changing its mind.</span>
       </div>
-      <div style={{ ...fadeUp(frame, fps, 175), marginTop: 40, fontFamily: FONT.mono, fontSize: 24, color: COLORS.amber }}>
-        ▶ {liveUrl}
+
+      {/* Live CTA: scannable QR + URL */}
+      <div style={{ ...fadeUp(frame, fps, 300), display: "flex", alignItems: "center", gap: 28, marginTop: 40 }}>
+        <Img
+          src={staticFile("qr.png")}
+          style={{ width: 260, height: 260, borderRadius: 12, background: COLORS.parchment, padding: 8 }}
+        />
+        <div>
+          <div style={{ fontFamily: FONT.mono, fontSize: 24, letterSpacing: 3, color: COLORS.amber, fontWeight: 700 }}>
+            ▶ TRY IT LIVE
+          </div>
+          <div style={{ fontFamily: FONT.mono, fontSize: 26, color: COLORS.textHi, marginTop: 10 }}>
+            {liveUrl}
+          </div>
+          <div style={{ fontSize: 20, color: COLORS.textLo, marginTop: 8 }}>
+            scan to open the demo
+          </div>
+        </div>
       </div>
     </SceneShell>
   );

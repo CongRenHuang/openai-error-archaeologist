@@ -1,41 +1,47 @@
 # Error Archaeologist — Pitch Video (Remotion)
 
 Programmable 3-minute pitch video for the OpenAI Build Week Education-track submission.
-**Skeleton stage**: all 6 scenes laid out with correct timing, text, and basic motion. No
-illustration polish yet.
+**Skeleton stage**: all 7 scenes laid out with correct timing, text, and basic motion, now
+timed to the recorded Amanda voiceover. No illustration polish yet.
 
 ## Structure
 
 ```
 src/
   theme.ts                 palette, fonts, scene timing table (single source of truth)
-  Root.tsx                 registers the "ErrorArchaeologist" composition (1920x1080, 30fps, 5250f)
-  Video.tsx                stitches the 6 scenes as <Sequence>s
+  Root.tsx                 registers the "ErrorArchaeologist" composition (1920x1080, 30fps, 5359f)
+  Video.tsx                stitches the 7 scenes as <Sequence>s, each with its Amanda VO <Audio>
+  audio/                   raw ElevenLabs (Amanda) VO + audio/trim/ (edge-silence trimmed)
+public/audio/              sceneN.mp3 the render pulls via staticFile()
   components/
     primitives.tsx         SceneShell, SceneTitle, ArtifactCard, CandidateCard, EvidenceBar, SyntheticTag
     PipelineRail.tsx       the §5 architecture spine, animated as a progress rail
   scenes/
     Scene1.tsx       0:00 Same answer, different reason (hook)
-    Scene2.tsx       0:22 Diagnosis gap, not another tutor (wedge)
-    Scene3.tsx       0:40 Evidence Loop  ← WOW moment
-    Scene4.tsx       1:26 Failure is product behavior (safety)
-    Scene5.tsx       1:56 Feasible wedge & business
-    Scene6Codex.tsx  2:16 Built with Codex + GPT-5.6 (REQUIRED narration)
-    Scene7Close.tsx  2:40 Why this team / close
-NARRATION.md         full voiceover transcript, timed to the table below
+    Scene2.tsx       0:20 Diagnosis gap, not another tutor (wedge)
+    Scene3.tsx       0:35 Evidence Loop  ← WOW moment
+    Scene4.tsx       1:27 Failure is product behavior (safety)
+    Scene5.tsx       1:53 Feasible wedge & business
+    Scene6Codex.tsx  2:13 Built with Codex + GPT-5.6 (REQUIRED narration)
+    Scene7Close.tsx  2:45 Why this team / close
+NARRATION.md         full voiceover transcript (the recorded Amanda VO)
 ```
 
-## Timing (30fps, 5340 frames = 2:58, under the 3:00 cap)
+## Timing (30fps, 5374 frames = 2:59.1, under the 3:00 cap)
 
-| Scene | Start | Dur | Frames |
-|---|---|---|---|
-| 1 | 0:00 | 22s | 0–660 |
-| 2 | 0:22 | 18s | 660–1200 |
-| 3 | 0:40 | 46s | 1200–2580 |
-| 4 | 1:26 | 30s | 2580–3480 |
-| 5 | 1:56 | 20s | 3480–4080 |
-| 6 | 2:16 | 24s | 4080–4800 |
-| 7 | 2:40 | 18s | 4800–5340 |
+Durations are **locked to the recorded Amanda voiceover** (`audio/trim/` edge-silence trimmed,
+then `audio/final/` at atempo 1.05), rounded to frames + 16f tail; 12f gap between scenes.
+Picture follows voice, not the reverse.
+
+| Scene | Start | Dur | Frames | VO |
+|---|---|---|---|---|
+| 1 | 0:00 | 593 | 0–593 | 19.23s |
+| 2 | 0:20 | 445 | 605–1050 | 14.29s |
+| 3 | 0:35 | 1491 | 1062–2553 | 49.16s |
+| 4 | 1:25 | 779 | 2565–3344 | 25.42s |
+| 5 | 1:52 | 584 | 3356–3940 | 18.91s |
+| 6 | 2:12 | 991 | 3952–4943 | 32.47s |
+| 7 | 2:45 | 419 | 4955–5374 | 13.40s |
 
 Edit all timings in `src/theme.ts` (`SCENES`).
 
@@ -43,11 +49,14 @@ Edit all timings in `src/theme.ts` (`SCENES`).
 
 The video satisfies the Build Week video rules; the rest are repo/form items:
 
-- **≤3 min, audio narration explaining Codex + GPT-5.6** → runtime 2:58; Scene 6 + `NARRATION.md`.
-- **New/existing-project clause** → Scene 6 timeline strip ("before 7/13: planning docs, 0 code;
-  during period: all code, Codex-built") + the note below.
+- **≤3 min, audio narration explaining Codex + GPT-5.6** → runtime 2:59.7; Scene 6 (the stack,
+  Codex's role, roadmap) + `NARRATION.md`.
+- **New/existing-project clause** → repo/form item, stated in the Codex-collaboration section
+  below. Intentionally **not** shown in-video (Scene 6 now leads with tech + future value; all
+  work done during Build Week).
 - **English submission** → all narration/onscreen text is English.
 - **README explains Codex collaboration** → see next section.
+- **Live demo** → Scene 7 shows a scannable QR (`public/qr.png`) to the Cloud Run URL.
 
 > Not in the video (submission form / main repo README): track selection, project text description,
 > repo license, Codex Session ID via `/feedback`, and free unrestricted testing access kept open

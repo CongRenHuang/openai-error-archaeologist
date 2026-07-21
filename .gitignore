@@ -8,5 +8,6 @@ __pycache__/
 demo-data/
 frontend/node_modules/
 frontend/dist/
+pitch-video/build/
 *.tsbuildinfo
 .DS_Store

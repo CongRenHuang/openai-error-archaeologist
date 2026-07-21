@@ -22,7 +22,7 @@ export const Scene4: React.FC = () => {
           <div
             key={c.title}
             style={{
-              ...fadeUp(frame, fps, 20 + i * 25),
+              ...fadeUp(frame, fps, 210 + i * 120),
               background: COLORS.bgSoft,
               border: `2px solid ${COLORS.line}`,
               borderLeft: `6px solid ${COLORS.red}`,
@@ -36,7 +36,7 @@ export const Scene4: React.FC = () => {
           </div>
         ))}
       </div>
-      <div style={{ ...fadeUp(frame, fps, 140), marginTop: 40, fontSize: 24, color: COLORS.textLo }}>
+      <div style={{ ...fadeUp(frame, fps, 660), marginTop: 40, fontSize: 24, color: COLORS.textLo }}>
         We report behavior at each abstention level — not a headline accuracy number from 30–36
         synthetic samples.
       </div>
