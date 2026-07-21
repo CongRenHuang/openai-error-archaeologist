@@ -45,7 +45,7 @@ This isn't a retreat — it's a more scientifically honest and more trustworthy 
 **Educational-measurement evidence — stated with its actual boundaries**
 
 - Russell, O'Dwyer & Miranda (2009): a four-arm cluster-randomized pilot with 905 students and 44 teachers. **Controlling for pretest**, the full intervention group (diagnostic report + targeted materials) scored **0.13 SD higher** (p<.05) on algebra ability than the group that received **only** an ability report; the group difference on the **misconception outcome was not statistically significant**; the authors themselves frame the overall result as preliminary evidence [6][12].
-- **What this study supports**: preliminary evidence that "integrating diagnostic information with targeted materials may improve learning." **What it does not support**: that LLM-based handwriting diagnosis works; nor can it isolate the effect of the diagnostic report on its own. This proposal cites it as support for the **intervention hypothesis**. The benchmark in §10 can test technical behavior, not learning effectiveness; effectiveness requires outcome-linked field validation.
+- **What this study supports**: preliminary evidence that "integrating diagnostic information with targeted materials may improve learning." **What it does not support**: that LLM-based handwriting diagnosis works; nor can it isolate the effect of the diagnostic report on its own. This proposal cites it as support for the **intervention hypothesis**. The planned acceptance benchmark in §10 can test technical behavior, not learning effectiveness; effectiveness requires outcome-linked field validation.
 
 **Evidence limits table** — external research validates the direction, not this product's performance:
 
@@ -53,42 +53,43 @@ This isn't a retreat — it's a more scientifically honest and more trustworthy 
 | --- | --- | --- |
 | Problem evidence | NAEP pressure at lower percentiles; tutoring cost and coverage bottlenecks | [1][2][3][4][9][10] |
 | Intervention precedent | Preliminary positive evidence for "diagnosis + targeted materials" | [5][6] |
-| Our eval | This product's diagnostic capability: §10 blind test + holdout, demo publicly includes failure cases | Self-produced |
+| Current product evaluation | Three curated synthetic samples plus automated technical tests; no blind test, sealed holdout, classroom study, or published benchmark artifact yet | Repository fixtures and tests |
+| Planned acceptance evidence | External sealed artifacts, including ambiguity, slips, and correct-answer/process-wrong cases; case-level failures published after evaluation | §10 target design |
 
 ## 3. Demand-Driven: The World Before LLMs (Principle 04)
 
 | Generation | Existing US solution | Limitation |
 | --- | --- | --- |
 | Human labor | High-dosage tutoring (1-on-1 to 1-on-2, diagnosis happens in the tutor's head) | $1,200-2,000/student/year; even effective programs reach only about 1-2% of eligible students [3][4] |
-| Rule/item-bank based | Diagnostic assessments: DAAS (10-12 multiple-choice testlets) [6]; commercial adaptive assessment (i-Ready, NWEA MAP) | DAAS-type tools rely on pre-written items, misconception distractors, and repeated-pattern responses; some commercial adaptive-assessment products mainly report skill/domain-level results (item design and output details for named products **have not been individually verified against official technical documentation**); both struggle to affordably handle a student's open-ended handwritten derivation |
+| Rule/item-bank based | Diagnostic assessments: DAAS (10-12 multiple-choice testlets) [6]; commercial adaptive assessment (i-Ready, NWEA MAP) | DAAS-type tools rely on pre-written items, misconception distractors, and repeated-pattern responses; some commercial adaptive-assessment products mainly report skill/domain-level results (item design and output details for named products **have not been individually verified against official technical documentation**); comparative handling and cost for open-ended handwriting have not been measured |
 | Traditional ML | Cognitive diagnosis models (CDM/DINA) [7], ITS (Cognitive Tutor / ASSISTments) | Depend on a pre-designed Q-matrix and closed item formats; ITS only diagnoses within its own system — it never sees a student's everyday paper homework |
 
 **What LLMs add**:
 
-1. **Handle free-form handwritten derivations** — an input format existing solutions can't affordably process.
-2. **No pre-authored distractor bank needed** — a new unit doesn't require expert design cycles for answer choices; marginal cost is significantly lower than the item-bank model (exact cost comparison to be validated in production).
+1. **Potentially handle free-form handwritten derivations** — the current demo shows structured analysis of three curated synthetic samples. Comparative capability, natural-handwriting reliability, and affordability versus existing solutions still require measurement.
+2. **Potentially reduce pre-authored distractor work** — on-the-fly candidates may reduce expert answer-choice design, but the current evaluation has not measured expert time, quality-adjusted cost, or marginal cost against an item-bank workflow.
 3. **Evidence localization** — anchoring candidate root causes to "the exact step the student wrote," which requires semantic understanding of the derivation process.
-4. **On-the-fly differentiating-probe generation** — for whatever pair of candidate hypotheses shows up in this instance, generate a question whose predicted answers differ. An item bank can't pre-anticipate which candidate pair will occur.
+4. **On-the-fly differentiating-probe generation** — generate a question whose predicted answers differ for the candidate pair in an instance. Whether this outperforms a pre-authored item-bank workflow remains an evaluation hypothesis.
 
 **Market positioning: not another grading tool** (extension of Principle 04)
 
 | Category | Representative examples (type) | Optimizes for | How we differ |
 | --- | --- | --- | --- |
-| Assessment/grading-oriented | Handwritten-math grading and partial-credit tools (IntelGrader, Ed.ai, GradingPal, etc.) | Administrative efficiency: scores, error tags, worksheets | We **don't assign grades**; output is an evidence-linked hypothesis + differentiating probe, optimizing **teaching decision quality** |
+| Assessment/grading-oriented | Handwritten-math grading and partial-credit tools (IntelGrader, Ed.ai, GradingPal, etc.) | Administrative efficiency: scores, error tags, worksheets | Current demo does not assign grades; target workflow evaluates whether an evidence-linked hypothesis + differentiating probe improves teaching decisions |
 | Student-facing solve-it apps | Photo-to-solution apps | Steps and answers | Current demo uses curated synthetic artifacts and supports teacher-facing hypothesis testing, not answer copying |
-| Diagnosis/tutoring platforms | Eedi, Glimmer, etc. | Misconceptions + intervention, some with RCTs/knowledge graphs | We focus on **everyday paper-based, open-ended handwritten derivation** + **a differentiating probe with verified predictions**; we do not claim RCT-validated efficacy |
+| Diagnosis/tutoring platforms | Eedi, Glimmer, etc. | Misconceptions + intervention, some with RCTs/knowledge graphs | Target differentiation is **everyday paper-based, open-ended handwritten derivation** + **a differentiating probe with verified predictions**; the current demo uses curated samples and has no RCT-validated efficacy |
 
-Honesty: Eedi and similar products have a longer validation track record. Named products in the table are **category examples only** — capability descriptions are **category-level generalizations, and individual product capabilities have not been individually verified against official technical documentation**. If public copy keeps named comparisons, official documentation must be added first; otherwise switch to anonymous category language. A first version can demonstrate a benchmark and human-review loop; copy will **not** say "scientifically validated."
+Honesty: Eedi and similar products have a longer validation track record. Named products in the table are **category examples only** — capability descriptions are **category-level generalizations, and individual product capabilities have not been individually verified against official technical documentation**. If public copy keeps named comparisons, official documentation must be added first; otherwise switch to anonymous category language. The current demo does not establish a benchmark or human-review loop; copy will **not** say "scientifically validated."
 
 ## 4. The Solution: Hypothesis → Evidence → Differentiating Probe → Teacher Review
 
-**Current demo boundary:** curated sample selection, multimodal structured analysis, evidence-linked candidates, SymPy-verified probe, response evidence update, and abstention are built. Upload, teacher accept/revise/reject, durable aggregate, authentication, and classroom validation are not built.
+**Current demo boundary and safeguards:** curated sample selection, Structured Outputs analysis, SymPy verification, response evidence update, and abstention are built. Current evaluation is limited to three curated synthetic samples plus automated technical tests. Upload, teacher accept/revise/reject, durable aggregate, authentication, classroom validation, and benchmark publication are not built or completed.
 
 **Target workflow after validation:**
 
-1. Teacher uploads a photo of synthetic/de-identified handwritten homework (planned demo path starts with pre-validated samples; live upload remains conditional on stable behavior).
-2. **Reasoning pipeline (Correct Answer Trap guard)**: first checks step-to-step mathematical validity/logical coherence, then compares against the final answer — it does **not** skip process-checking just because the final answer is correct. An answer-correct-but-process-wrong case can still surface candidate mal-rules (included in demo and blind test).
-3. The model visually understands the handwritten derivation and returns a **fixed structured output**:
+1. A teacher uploads a photo of synthetic/de-identified handwritten homework after privacy and reliability acceptance gates pass.
+2. A **Correct Answer Trap guard** checks step-to-step mathematical validity/logical coherence before comparing the final answer. The planned acceptance set includes answer-correct-but-process-wrong cases; the current three curated samples do not establish this behavior.
+3. The model returns a target fixed structured output for the handwritten derivation:
 
 ```json
 {
@@ -125,7 +126,7 @@ Honesty: Eedi and similar products have a longer validation track record. Named 
 }
 ```
 
-**`error_disposition` heuristic** (explicitly a heuristic, not a calibrated threshold; evaluable in the seed benchmark):
+**Target `error_disposition` heuristic** (explicitly a heuristic, not a calibrated threshold; to be evaluated in the planned acceptance benchmark):
 
 | Value | Trigger condition (summary) | Downstream |
 | --- | --- | --- |
@@ -150,9 +151,11 @@ Honesty: Eedi and similar products have a longer validation track record. Named 
 - `insufficient_evidence`: image/derivation insufficient or `input_uncertainty` set -> abstain, state what's missing
 - No numeric confidence is ever displayed; numeric calibration stays on the roadmap (requires a calibration set).
 
-**Designed depth of Codex + GPT-5.6 usage** (Build Week judging criterion ①): multimodal handwriting parsing, abductive candidate generation, fixed structured output, evidence localization, differentiating-probe generation, and abstention. This is the intended reasoning loop. Build claims must be added only with dated code, session logs, runnable setup, and benchmark artifacts.
+**Current built depth of Codex + GPT-5.6 usage** (Build Week judging criterion ①): three curated samples exercise Structured Outputs analysis; the application then applies SymPy verification, response evidence update, and abstention. Upload, teacher review, aggregation, a sealed benchmark, and classroom evidence remain target work. Claims beyond the current boundary require dated code, runnable setup, and completed acceptance artifacts.
 
 ## 5. Technical Architecture and Verification Boundaries (Principles 02 and 06)
+
+**Target architecture after validation (not the current demo):**
 
 ```text
 Photo intake + client-side PII warning/redaction
@@ -166,14 +169,14 @@ Photo intake + client-side PII warning/redaction
   -> de-identified event store + class aggregation
 ```
 
-The model proposes parses, hypotheses, and probe candidates. It does **not** certify its own mathematics. A deterministic algebra layer checks step equivalence, and a symbolic solver rejects probes whose predicted answers collide. If parsing alternatives change the mathematics, the pipeline abstains. This separation makes failures attributable to perception, mathematical validation, hypothesis generation, or probe construction rather than hiding every failure inside one prompt.
+In the current demo, Structured Outputs analysis proposes hypotheses and a probe for a curated sample; SymPy verifies the probe, the response endpoint updates evidence, and ambiguous input can abstain. The target architecture extends that separation to upload, teacher review, and aggregation. The model must not certify its own mathematics.
 
-Pluggable boundaries are limited and explicit:
+Target pluggable boundaries are limited and explicit:
 
 - **Reasoning engine:** model identifier and reasoning effort are configuration; model tiers must be benchmarked for quality, latency, and cost.
 - **Taxonomy:** versioned curriculum-specific misconception rules with source provenance. Changing standards requires taxonomy review and regression tests, not merely replacing one JSON file.
-- **Input adapter:** photo upload for the first version; batch scanning and LMS ingestion are separate products.
-- **Output contract:** versioned structured result consumed by review UI, evaluation harness, and aggregate store.
+- **Input adapter:** privacy-reviewed photo upload after acceptance gates; batch scanning and LMS ingestion are separate products.
+- **Output contract:** versioned structured result intended for a review UI, evaluation harness, and aggregate store.
 
 Cross-domain reuse remains an architectural hypothesis. Coding, language transfer, and clinical reasoning require different evidence models, validators, risks, and buyers.
 
@@ -188,7 +191,7 @@ The beachhead is **Grade 7–9 intervention teachers and tutor coordinators mana
 | **Buyer** | Tutoring/intervention-program operator | Increase useful diagnostic coverage per educator-hour |
 | **Beneficiary** | Student | Receive a probe and intervention matched to observed evidence |
 
-Initial workflow: select or batch-upload incorrect work -> review candidate hypotheses and evidence -> assign one verified probe -> inspect response -> accept, revise, or reject suggested classification -> use aggregate only after review. One-photo-at-a-time grading for a full class is not assumed efficient and must be tested.
+Target pilot workflow: select or batch-upload incorrect work -> review candidate hypotheses and evidence -> assign one verified probe -> inspect response -> accept, revise, or reject suggested classification -> use aggregate only after review. This workflow is not implemented in the current demo, and its efficiency must be tested.
 
 Remote interviews validate workflow assumptions, not demand by themselves: at least two Grade 7–9 math educators, one tutor coordinator, and one buyer. Measure current diagnosis time, acceptable review latency, false-positive tolerance, whether the probe changes the next teaching action, purchasing authority, and pilot evidence requirements.
 
@@ -228,16 +231,24 @@ Current scope remains one middle-school algebra behavior. Technical verification
 
 ## 9. Failure Cost and Risk Design (Principle 07)
 
-Consequences of misdiagnosis: a teacher acts on a wrong diagnosis -> wasted teaching time, students mislabeled, **alert fatigue** (treating a slip as a misconception). This is a medium-risk domain; safeguards:
+Consequences of misdiagnosis include wasted teaching time, student mislabeling, and **alert fatigue** from treating a slip as a misconception. This is a medium-risk domain.
 
-- **Hypothesis, not verdict**: output is always `candidate_misconceptions[]` + `alternative_explanation` + `error_disposition`; UI copy never uses an assertive sentence like "this student's root cause is."
-- **Teacher-in-the-loop / educator co-pilot**: only after the teacher accepts, revises, or rejects a suggestion does it enter an aggregate or trigger practice. Acceptance records workflow usefulness, not psychological ground truth. The teacher retains veto power.
-- **Abstain mechanism**: unclear image, ambiguous symbols, insufficient derivation, or a differentiating probe that can't generate distinguishable predictions -> no forced diagnosis, show what's missing instead.
-- **Mandatory evidence**: every candidate hypothesis must carry `evidence_steps` a teacher can verify in 10 seconds — a diagnosis that can be falsified is a responsible diagnosis.
-- **Correct Answer Trap**: steps take priority over the final answer; the blind test includes "answer correct, process wrong" samples (§10).
-- **Slip vs. mal-rule**: `error_disposition` heuristic + differentiating probe; a single isolated error defaults to *not* entering the misconception aggregate unless a teacher accepts it after review.
-- **Automation-bias control**: periodically blind reviewers to the model label, record revisions separately from accepts, and audit whether teachers disproportionately accept plausible-sounding suggestions.
-- Technical risk: unstable handwriting recognition -> first path uses a pre-validated sample set; "just a prompt wrapper" risk -> deterministic verification, versioned taxonomy, and published benchmark artifacts (§10).
+**Current safeguards, evidenced only by three curated synthetic samples and automated technical tests:**
+
+- Curated sample selection avoids accepting real student data.
+- Structured Outputs analysis constrains the model response.
+- SymPy verification rejects probes with colliding candidate predictions or a prediction equal to the correct answer.
+- Response evidence update supports, weakens, or fails to distinguish candidates.
+- Abstention avoids forcing a result for the curated ambiguous case or an unverifiable probe.
+
+**Target controls and acceptance evidence, not current behavior:**
+
+- **Teacher-in-the-loop:** accept, revise, or reject before an event enters an aggregate or triggers practice; acceptance measures workflow usefulness, not psychological ground truth.
+- **Evidence review:** require evidence-linked candidates that an educator can inspect quickly, then measure localization quality and review time.
+- **Correct Answer Trap:** include answer-correct-but-process-wrong cases in the planned sealed acceptance set (§10).
+- **Slip vs. mal-rule:** validate the target `error_disposition` heuristic and exclude unreviewed events from any future aggregate.
+- **Automation-bias control:** blind reviewers periodically, record revisions separately from accepts, and audit acceptance behavior.
+- **Published acceptance evidence:** version and publish case-level benchmark results and failures only after the planned evaluation is executed.
 
 ## 10. Data Availability and Validity Verification (Principle 08)
 
@@ -246,15 +257,15 @@ Consequences of misdiagnosis: a teacher acts on a wrong diagnosis -> wasted teac
 | Need | Source | Access path |
 | --- | --- | --- |
 | Problems | NAEP publicly released items (public domain) + self-authored | Already public, zero cost [1] |
-| Handwritten error samples | **Team-produced realistic samples** (see benchmark design below) | Available without real student data; not representative of classroom prevalence |
+| Handwritten error samples | Three current repository-owned synthetic fixtures; additional team-produced samples are planned for the acceptance benchmark below | Current fixtures are available without real student data and are not representative of classroom prevalence |
 | Taxonomy | Published algebra-misconception literature (DAAS, three concepts [6]; error-analysis research) | Public literature, cited in README |
-| Real student data | Not used in the MVP | Production stage: district agreement + de-identification, roadmap |
+| Real student data | Not used or accepted by the current demo | Target production stage requires district agreement + de-identification |
 
 **Compliance statement:** public demo exposes only repository-owned synthetic samples and has no upload endpoint. It stores structured analysis in disposable SQLite state; it does not accept real student data. Production use still requires access controls, retention/deletion policy, district agreements, subprocessor review, and security assessment.
 
 **Platform-layer boundary** [13]: OpenAI API inputs/outputs are by default not used for model training, but the platform may by default retain abuse-monitoring logs for **up to 30 days**; Zero Data Retention applies only to approved organizations and eligible endpoints. Application-layer "delete after processing" is **not** the same as end-to-end zero retention — copy will **not** claim zero retention.
 
-**Technical benchmark seed set (30-36 samples)**:
+**Planned technical acceptance benchmark seed set (30-36 samples; not yet collected or run)**:
 
 | Category | Count |
 | --- | --- |
@@ -265,11 +276,11 @@ Consequences of misdiagnosis: a teacher acts on a wrong diagnosis -> wasted teac
 | **Correct Answer Trap** (final answer correct, process wrong) | 2-4 |
 | **Total** | **30-36** |
 
-- This seed set demonstrates technical behavior only. Team-produced samples do not represent classroom prevalence or natural handwriting noise, and 16-20 error cases cannot support a stable 8-10-class macro-F1 claim.
-- Two annotators independently label expected parse, first invalid transition, plausible hypothesis set, and disposition. Report agreement; adjudicate disagreements before sealing the holdout. An outside math educator labels the full holdout without seeing model output.
-- Run each model configuration multiple times and record model snapshot, prompt/taxonomy version, reasoning configuration, latency, token/image usage, retries, and cost.
+- If completed, this seed set will demonstrate technical behavior only. Team-produced samples will not represent classroom prevalence or natural handwriting noise, and 16-20 error cases cannot support a stable 8-10-class macro-F1 claim.
+- Two annotators will independently label expected parse, first invalid transition, plausible hypothesis set, and disposition. They will report agreement and adjudicate disagreements before sealing a holdout. An outside math educator should label the full holdout without seeing model output.
+- Each model configuration should run multiple times with model snapshot, prompt/taxonomy version, reasoning configuration, latency, token/image usage, retries, and cost recorded.
 
-**Evaluation layers and decision metrics**:
+**Planned evaluation layers and decision metrics:**
 
 | Layer | Primary metric | What it establishes |
 | --- | --- | --- |
@@ -281,7 +292,7 @@ Consequences of misdiagnosis: a teacher acts on a wrong diagnosis -> wasted teac
 | Workflow | Median teacher review time; accept/revise/reject rates | Whether product saves work and supports decisions |
 | Learning signal | Delayed transfer-item performance | Whether product may improve learning; requires field study |
 
-Publish case-level failures. Do not headline one aggregate “accuracy” number from this seed set.
+After the evaluation is completed, publish case-level failures. Do not headline one aggregate “accuracy” number from this seed set.
 
 ## 11. Current Demo and Submission Visibility (Principle 09)
 
@@ -295,9 +306,9 @@ The public Cloud Run demo implements one constrained, testable loop:
 
 The demo does not implement upload, teacher review, class aggregation, authentication, or field validation. Submission copy must not imply otherwise.
 
-Impact narrative may use completed teacher interviews, benchmark results, and measured review time. If those results do not exist, remove the claims. Keep the $31T model estimate out of the pitch. Any public live URL must expose synthetic/de-identified samples and a visible abstention/reject path.
+Current submission evidence supports only the constrained technical loop and its creative use of testable hypotheses. The three curated samples and automated technical tests do not establish a complete teacher decision flow, diagnostic accuracy, classroom impact, or workflow-time savings.
 
-Maps to four judging criteria only after build evidence exists: technical implementation (parse + deterministic verification + structured hypotheses + verified probe + abstention), design (complete teacher decision flow), impact (interviews + workflow time + benchmark evidence), creativity (AI proposes testable hypotheses rather than issuing a verdict).
+Future design and impact claims require the target teacher-review flow, completed educator interviews, benchmark results, and measured review time. Any future upload path also requires privacy and reliability acceptance gates. Keep the $31T model estimate out of the pitch.
 
 ## 12. Defensibility Strategy (Principle 10)
 
@@ -311,17 +322,17 @@ Honest premise: current repository has no built-in moat. What follows is a defen
 
 **Not built and not written up as an existing moat**: full-subject Graph-RAG, multi-model ensembles, and fine-tuning. These remain optional future techniques, not substitutes for validation.
 
-## 14. Reviewer Pressure Q&A (rapid-fire)
+## 13. Reviewer Pressure Q&A (rapid-fire)
 
 Four categories of pointed questions drawn from an external deep-review pass; the pitch deck and Devpost FAQ use the same set of answers.
 
 **Q1: How do you avoid hallucinated diagnoses given ambiguous handwriting / symbol misreads (2 vs. z, x vs. multiplication sign)?**
 
-A: Multimodal parsing plus deterministic algebra verification; any ambiguity that changes the mathematics triggers `input_uncertainty` + `insufficient_evidence`, stating exactly what is unclear. Planned demo starts with pre-validated samples. Live upload is shown only after ambiguity and abstention behavior passes its benchmark.
+A: The current demo limits input to three curated synthetic samples. Structured Outputs analysis, SymPy verification, response evidence update, and abstention are built and covered by automated technical tests. Natural-handwriting reliability and live upload remain target capabilities gated on a completed ambiguity and abstention benchmark.
 
 **Q2: How do you distinguish carelessness (slip) from a systemic misconception (mal-rule)?**
 
-A: `error_disposition` heuristic (an isolated single-step error -> `likely_slip`; maps to taxonomy / reproducible -> `candidate_mal_rule`) + evidence updates from the differentiating probe. The benchmark includes slip samples. We do not claim a perfect threshold exists; teacher review controls downstream action but does not establish psychological ground truth.
+A: The current demo updates candidate support from a differentiating-probe response but does not validate a slip-versus-mal-rule threshold. The planned acceptance benchmark will include slip samples, and target teacher review will control downstream action without claiming psychological ground truth.
 
 **Q3: FERPA/COPPA and whether data is used for training?**
 
@@ -329,7 +340,7 @@ A: The public demo exposes only repository-owned synthetic artifacts and has no 
 
 **Q4: What about the quality and curriculum alignment of the post-diagnosis remediation content?**
 
-A: The first version closes the loop at teacher review and next-action selection; it does **not** depend on free-form item generation. Practice remains template-based. Freely generated item correctness and standards alignment require a separate validation program.
+A: The current demo stops after response evidence update and does not implement teacher review, next-action selection, or remediation. The target design uses teacher review and template-based practice; freely generated item correctness and standards alignment require a separate validation program.
 
 ---
 
