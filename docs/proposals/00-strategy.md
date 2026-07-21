@@ -75,6 +75,15 @@
 ### Devpost Plugin(選用,非必要)
 
 - 可在 ChatGPT/Codex 內安裝,協助腦力激盪、規劃、準備提交,但**不是官方資訊來源**——衝突時一律以 Official Rules / Hackathon Website 為準
+- 指令:`$find-hackathons`(找賽事)、`$start-hackathon`(報名+規則導覽)、`$resources`(最佳實踐 + 引導式 POC 建置)、`$prepare-submission`(提交前安全與資格審核)、`$submit`(完成提交表單)
+- **找隊友**:提交流程中 plugin 會給一個 invite link,可分享給隊友加入——單人作業可跳過此步
+- Plugin 內的 session 仍算 Codex session,但純聊天/`/checklist` 不算「實際建置」,評審看的是真的做出東西
+
+### 官方支援管道(FAQ 補充,2026-07-15)
+
+- 問題 FAQ 沒答到:加入 OpenAI Discord `#build-week-chat`(<https://discord.gg/openai>)或發 [Discussion Board](https://openai.devpost.com/forum_topics)
+- **找隊友**(對應 participants 搜尋頁 `team_setting=1` 篩選「找隊友」者):Devpost 本身無 DM,主要靠上述 Discord 找人或 Devpost plugin 的 invite link;participants 頁面通常只能看到對方公開的外部聯絡方式(GitHub/LinkedIn 等)
+- 提交後仍可編輯(FAQ 明確答「Yes」),但 Submission Period 結束(7/21 17:00 PT)後鎖死不可再改——两者不矛盾:是「截止前可改」vs「截止後不可改」
 
 ---
 

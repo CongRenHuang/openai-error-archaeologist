@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repo state
 
-Pre-code planning repo for OpenAI Build Week 2026 (July 13–21, submissions; judging through Aug 9; winners Aug 12). No app scaffold, no build/lint/test tooling exists yet — this repo is currently pure strategy/research docs. Once implementation starts, update this section with real build/test/lint commands.
+Pre-code planning repo for OpenAI Build Week 2026 (July 13–21, submissions; judging through Aug 5; winners Aug 12). No app scaffold, no build/lint/test tooling exists yet — this repo is currently pure strategy/research docs. Once implementation starts, update this section with real build/test/lint commands.
 
 ## Structure
 

@@ -4,6 +4,8 @@
 
 ## About the project
 
+We're building for the **Education** track. Error Archaeologist is an AI diagnostic layer for math homework: a teacher uploads a photo of a student's handwritten work, and instead of just marking it right or wrong, GPT-5.6 proposes falsifiable candidate misconceptions anchored to the exact step where they show up, then generates a follow-up question designed so each hypothesis predicts a different answer — converging on a diagnosis a teacher can confirm in ten seconds instead of guessing.
+
 ## Inspiration
 
 Teachers grading math homework see *that* an answer is wrong, not *why*. The same wrong answer can hide multiple different root causes — for example `-3(x - 2) = -3x - 6` could come from a distribution misconception, a sign-rule error, carelessness, or a transcription slip — and each needs a completely different response. Scale-up tools already exist for screening ("who's behind") and remediation ("who gets a tutor"), but nothing scales the diagnosis layer in between. High-dosage tutoring, the main human solution, costs $1,200–$2,000/student/year and reaches only ~1–2% of eligible students even in its stronger programs (CALDER, MDRC). Meanwhile NAEP 2024 shows 39% of 8th graders below Basic in math. That gap — real diagnostic need, no scalable tool — is what pulled us toward this project.
