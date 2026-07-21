@@ -1,7 +1,9 @@
 # Error Archaeologist Sample Demo Architecture
 
-**Status:** Approved design, not yet implemented  
-**Date:** 2026-07-22  
+**Status:** Approved design, not yet implemented
+
+**Date:** 2026-07-22
+
 **Target:** One public, judge-ready demo deployable to Google Cloud Run
 
 ## Goal and Success Criteria
