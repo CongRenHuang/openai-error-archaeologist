@@ -4,6 +4,7 @@
 > 團隊設定:2 人、每日半職(~4–6 小時/人),總預算 ≈ 80–100 人時
 > 主攻方向:教育/學習
 > 本文件併入原 `index.md` 的賽事事實查核內容(2026-07-14 合併,單一檔案維護)
+> **狀態更新(2026-07-22):** 本 repo 目前仍只有研究與產品設計文件,沒有可執行 app、deployment 或完成的 eval。以下原始競賽時程保留作 audit record,不得視為完成紀錄。
 
 ## 〇、賽事官方事實(2026-07-14 依 [openai.devpost.com](https://openai.devpost.com/)、[Official Rules](https://openai.devpost.com/rules) 校對)
 
@@ -95,16 +96,16 @@
 - ~~Tracks 於 7/13 9:00 PDT submissions 開放時公布~~ → **已公布,見上方「〇」,4 track 含 Education**。
 - 官方評分四項:①Codex 運用深度 ②完整產品體驗(非 PoC)③可信影響力論證 ④非顯而易見創意。
 
-## 二、競爭態勢判斷
+## 二、競爭態勢假設(非官方統計)
 
-1. **Dev tools 必然最擁擠**:10,202 名以開發者為主的參賽者(2026-07-14 統計),本能做給自己用的工具(參考 GitLab Duo 場次:600+ 件多為 CI/CD、安全、文件同步)。
-2. **教育是套利機會**:教育類提交量低、評審席上卻坐著教育副總裁;且教育類提交的大宗會是「AI 家教 chatbot」——恰好違反評分④「非顯而易見」。差異化空間大。**教育 track 現已確認存在,無需再靠決策樹推導。**
-3. **得獎預測因子**(Devpost 10 萬件專案統計研究 + GitLab Duo 得獎分析):
-   - Demo 品質 = 第一預測因子;提交完整度 = 第二。
-   - GitLab 冠軍 LORE 模式:具體痛點一句話敘事 + 多 agent 架構 + 43 個測試的完整度。
-   - 視覺 wow 效果(computer vision 類勝率最高)→ 拍照/多模態輸入是加分器。
+1. **Dev tools 可能較擁擠:**10,202 是 2026-07-14 參賽者頁面快照,不是各 track 提交量。開發者偏好不能推導實際競爭密度。
+2. **Education 差異化假設:**「大量作品會是 AI tutor chatbot」尚無 submission data 支持。可主張本案不是一般 tutor,但不可稱 Education 為套利機會。**Education track 已確認存在。**
+3. **內部評審啟發式**(不可包裝成官方因果模型):
+   - Demo 品質與提交完整度重要,但「第一、第二預測因子」需原始研究方法才能對外聲稱。
+   - GitLab 冠軍 LORE 可作完整度案例,不可由單一案例推導多 agent 或測試數量會造成得獎。
+   - 拍照/多模態輸入有 demo 視覺性;「computer vision 勝率最高」若無可重現資料分析則不對外聲稱。
 
-## 三、資源配置原則(80–100 人時)
+## 三、原始資源配置(歷史 audit record)
 
 | 配置 | 人時 | 說明 |
 |---|---|---|
@@ -114,18 +115,18 @@
 | 測試 + 文件 | 10 | LORE 模式:完整度信號 |
 | 緩衝 | 10–20 | 手寫辨識等技術風險 |
 
-**紀律**:7/19 晚上 feature freeze,最後兩天只做 demo、文件、打磨。
+**原紀律**:7/19 晚上 feature freeze,最後兩天只做 demo、文件、打磨。此日期已過,不代表實際完成。
 
 ## 四、四案總覽與推薦
 
 | 提案 | 一句話 | ①技術 | ②完整度可行性 | ③影響力 | ④創意 | 綜合 |
 |---|---|---|---|---|---|---|
-| [A 錯誤考古學家](01-error-archaeologist.md) | AI 診斷「你為什麼會這樣錯」 | ★★★★★ | ★★★★ | ★★★★ | ★★★★★ | **首推** |
+| [A 錯誤考古學家](01-error-archaeologist.md) | AI 提出錯因假設並用後續題取得區辨證據 | ★★★★★ | ★★ | ★★★★ | ★★★★★ | **首推,但執行風險高** |
 | [B 教學相長](02-protege-effect-tutor.md) | 學生教 AI,AI 裝不懂 | ★★★★ | ★★★★ | ★★★ | ★★★★★ | 備選 |
 | [C 閱讀處方箋](03-reading-prescription.md) | 讀寫障礙的語言層級自適應閱讀 | ★★★ | ★★★ | ★★★★★ | ★★★ | — |
 | [D 作業翻譯官](04-homework-bridge.md) | 讓移民家長能輔導孩子功課 | ★★ | ★★★★★ | ★★★★ | ★★★ | 保底 |
 
-**推薦:A 案。** 理由:四項評分無短板;拍照→診斷的 demo 有視覺衝擊;「診斷錯因而非給答案」一句話就能讓評審記住;而 B 案可作為 A 案的內建延伸模組(診斷出迷思後,讓學生「教回去」驗證理解)——若進度超前可合併敘事。
+**推薦:A 案,但不再稱「四項無短板」。** 創意、問題敘事與視覺 demo 潛力強;目前短板是沒有 runnable evidence、真實使用者驗證、可靠成本與付款路徑。B 案不應在核心 pipeline、驗證與 demo 尚未完成前合併,避免擴 scope。
 
 ## 五、Tracks 已公布 —— 決策結果(原決策樹已解,保留紀錄供回溯)
 
@@ -137,7 +138,23 @@ Tracks 公布(2026-07-14 確認:Apps for Your Life / Work & Productivity / Devel
 
 行動:**已完成track確認**,無需再等待。A 案定案投 **Education** track。
 
-## 六、共同執行時程(適用四案,已對齊官方 Judging Period 至 8/5)
+## 六、產品成立閘門(取代日期驅動的完成宣稱)
+
+| Gate | 必須交付 | 退出證據 |
+|---|---|---|
+| 0 真實性 | 狀態標記 RESEARCHED / DESIGNED / BUILT / VALIDATED | README 與 repo 證據一致 |
+| 1 感知與數學 | 手寫 parse + 獨立代數驗證 | transcription、first-invalid-step 分開評估 |
+| 2 假設與區辨題 | taxonomy candidates + 受限生成 + symbolic verifier | 預測相撞就 abstain,有自動測試 |
+| 3 教師流程 | accept / revise / reject + reviewed aggregate | reject 不進 aggregate,保留 audit event |
+| 4 驗證 | 外部 holdout + 多次模型 run + failure cases | 不用 30–36 個 synthetic case 宣稱科學效度 |
+| 5 商業 | intervention/tutoring buyer pilot hypothesis | cost/analysis、review time、retention、paid conversion |
+| 6 隱私 | synthetic/de-identified only + retention boundary | app storage check、API retention disclosure、DPA roadmap |
+
+初始 ICP:Grade 7–9 intervention teacher / tutor coordinator;初始 buyer:tutoring 或 intervention-program operator。商業順序:provider platform fee + usage → embedded API → district license。State procurement 只放長期 roadmap。
+
+非美國團隊敘事:公開政府資料可建立問題規模、市場結構、課程與 privacy constraints;不能建立 daily workflow 或 willingness to pay。完成 US educator remote interviews 後才可說:「在台灣以可追溯美國公開資料設計,再由美國教育者遠端驗證。」
+
+## 七、原始共同執行時程(歷史 audit record)
 
 | 日期 | 里程碑 |
 |---|---|
@@ -148,7 +165,9 @@ Tracks 公布(2026-07-14 確認:Apps for Your Life / Work & Productivity / Devel
 | 7/20 | Demo 影片(≤3 分鐘,需涵蓋 Codex + GPT-5.6 使用說明)、Devpost 頁面、README(含 Codex 協作說明) |
 | 7/21 | 打磨 + 取得 `/feedback` Codex Session ID + 提前於 12:00 PDT 送出(留 5 小時緩衝於 5:00 pm 截止前) |
 
-## 七、提交清單(完整度信號,已依官方 Submission Requirements 補齊)
+此表記錄原計畫,不代表里程碑已完成。實際完成狀態只看 repo、deployment、eval artifacts 與提交紀錄。
+
+## 八、提交清單(完整度信號,已依官方 Submission Requirements 補齊)
 
 - [ ] 已選定 track:**Education**
 - [ ] Demo 影片 ≤3 分鐘,前 30 秒內出現 wow 時刻,音訊需說明如何使用 Codex 與 GPT-5.6

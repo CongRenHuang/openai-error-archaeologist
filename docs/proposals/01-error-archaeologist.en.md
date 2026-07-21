@@ -1,8 +1,10 @@
 # Proposal A (Lead Pick): Error Archaeologist — A Diagnostic-Hypothesis Engine for Math Mistakes
 
-> One-liner: **The AI doesn't guess what's in a student's head. It proposes candidate root causes, points to the exact step where the evidence is, then generates a differentiating experiment with a verifiable prediction to converge on a diagnosis.**
+> One-liner: **The AI proposes candidate explanations, shows the evidence, and asks a mathematically verified follow-up question. The student's response changes the evidence; the teacher retains judgment.**
 >
 > Version 7 (2026-07-14, English translation): Revised per the literature-audit report (`docs/res/codex/reference-revision-report.md`). P0: 66% → corrected to NCES 46%; ESSER/CALDER/Hanushek split into independent sources; Russell +0.13 SD precisely qualified (pretest-controlled, misconception outcome not significant); "no state returned to 2019" claim removed; "scale-driven decay" reworded as a descriptive comparison; API retention section adds the 30-day abuse-log boundary. P1: named-competitor claims downgraded to category-level generalizations; reference list rebuilt as 13 clickable entries; Tennessee/Texas policy examples demoted to an appendix; new Evidence-limits column added. The v6 educational-measurement framing (slip vs. mal-rule, `error_disposition`, Correct Answer Trap, four reviewer Q&As) is preserved.
+
+> **Current evidence status (2026-07-22):** this repository contains product research and design documents, not a working application. Labels used below: **RESEARCHED** = supported by cited external evidence; **DESIGNED** = specified but not implemented; **BUILT** = present in runnable code; **VALIDATED** = tested against a declared acceptance method. At this revision, external problem evidence is RESEARCHED; product components are DESIGNED unless a later commit supplies runnable evidence and results.
 
 ---
 
@@ -12,13 +14,13 @@
 
 When teachers grade math homework, they see *that* an answer is wrong, not *why*. The same wrong answer can hide multiple different root causes — for example `-3(x - 2) = -3x - 6` could come from a distribution misconception, a sign-rule error, carelessness, or a transcription slip — and each needs a completely different response. Both the screening layer (who's falling behind) and the remediation layer (tutoring/course placement) already have scalable tools; the diagnosis layer in between does not have an equally scalable tool (limitations of existing approaches are covered in the comparison table in §3).
 
-**Honest premise**: a single piece of homework **cannot uniquely identify** the root cause — the same error can come from a misconception (mal-rule), carelessness (slip), a transcription error, a misread question, or input/transcription noise. So this product does not make an "AI verdict." It makes "AI proposes candidate hypotheses + evidence for each hypothesis + one differentiating experiment with a prediction," and the teacher confirms while the student's next answer helps converge.
+**Honest premise**: a single piece of homework **cannot uniquely identify** the root cause — the same error can come from a misconception (mal-rule), carelessness (slip), a transcription error, a misread question, or input/transcription noise. So this product does not make an "AI verdict." It proposes candidate hypotheses with evidence and a differentiating probe with predictions. The student's next answer changes the evidence ranking. The teacher determines whether the result is useful enough to act on.
 
 **Measurement boundaries (basic educational-diagnosis hygiene)**:
 
 | Phenomenon | Meaning | What the product should do |
 | --- | --- | --- |
-| Reproducible error rule (mal-rule) | Systemic misconception | Candidate hypotheses + differentiating experiment |
+| Reproducible error rule (mal-rule) | Systemic misconception | Candidate hypotheses + differentiating probe |
 | Isolated missed step / overload (slip) | Not a misconception | Prioritize `likely_slip`; don't trigger remediation labels |
 | Transcription / image ambiguity | Measurement error, not cognitive | `insufficient_evidence`, abstain |
 | Final answer correct but process wrong | Correct Answer Trap | Diagnose steps first; can still surface candidates (see §4) |
@@ -33,7 +35,7 @@ This isn't a retreat — it's a more scientifically honest and more trustworthy 
 - National 8th-grade math average showed **no significant change** from 2022 to 2024, but is **still below 2019**; the flat national average masks a **K-shaped divergence** — higher-percentile scores recovering, lower-percentile scores declining, the gap widening [1][2]. The product serves the diagnosis layer ("why is this specific student stuck") not the national-average narrative.
 - Economic cost: Hanushek and Strauss estimate pandemic learning loss could cost the US roughly **$31T in present-value GDP** over the 21st century — this is a **model estimate derived from the relationship between skills and long-run growth, not money already spent** [11]. Recommendation: cut this number from the demo — it's huge, far from a teacher's actual workflow, and mainly invites questions about the model's assumptions (§11).
 
-**Severity — governments have already shown willingness to pay, but the main intervention doesn't scale**
+**Severity — governments have funded recovery, but this does not prove demand for this product**
 
 - The US Congress appropriated **$189.5B** across three rounds of ESSER for K-12 pandemic response and recovery [9].
 - NCES School Pulse Panel: **46%** of public schools offered high-dosage tutoring (HDT) in the 2023-24 school year [10].
@@ -43,7 +45,7 @@ This isn't a retreat — it's a more scientifically honest and more trustworthy 
 **Educational-measurement evidence — stated with its actual boundaries**
 
 - Russell, O'Dwyer & Miranda (2009): a four-arm cluster-randomized pilot with 905 students and 44 teachers. **Controlling for pretest**, the full intervention group (diagnostic report + targeted materials) scored **0.13 SD higher** (p<.05) on algebra ability than the group that received **only** an ability report; the group difference on the **misconception outcome was not statistically significant**; the authors themselves frame the overall result as preliminary evidence [6][12].
-- **What this study supports**: preliminary evidence that "integrating diagnostic information with targeted materials may improve learning." **What it does not support**: that LLM-based handwriting diagnosis works; nor can it isolate the effect of the diagnostic report on its own. This proposal cites it as support for the **intervention hypothesis**, not as a claim of replicating its effect. Our own evidence of effectiveness comes from the blind evaluation in §10.
+- **What this study supports**: preliminary evidence that "integrating diagnostic information with targeted materials may improve learning." **What it does not support**: that LLM-based handwriting diagnosis works; nor can it isolate the effect of the diagnostic report on its own. This proposal cites it as support for the **intervention hypothesis**. The benchmark in §10 can test technical behavior, not learning effectiveness; effectiveness requires outcome-linked field validation.
 
 **Evidence limits table** — external research validates the direction, not this product's performance:
 
@@ -66,7 +68,7 @@ This isn't a retreat — it's a more scientifically honest and more trustworthy 
 1. **Handle free-form handwritten derivations** — an input format existing solutions can't affordably process.
 2. **No pre-authored distractor bank needed** — a new unit doesn't require expert design cycles for answer choices; marginal cost is significantly lower than the item-bank model (exact cost comparison to be validated in production).
 3. **Evidence localization** — anchoring candidate root causes to "the exact step the student wrote," which requires semantic understanding of the derivation process.
-4. **On-the-fly differentiating-experiment generation** — for whatever pair of candidate hypotheses shows up in this instance, generate a question whose predicted answers differ. An item bank can't pre-anticipate which candidate pair will occur.
+4. **On-the-fly differentiating-probe generation** — for whatever pair of candidate hypotheses shows up in this instance, generate a question whose predicted answers differ. An item bank can't pre-anticipate which candidate pair will occur.
 
 **Day-1 gate**: GPT-5.6 is the competition-required model. First thing on Day 1: get the officially announced model ID and API access, and put it in config — do not assume the string `gpt-5.6` exists. The pipeline has no coupling to a specific model version (§5).
 
@@ -74,15 +76,15 @@ This isn't a retreat — it's a more scientifically honest and more trustworthy 
 
 | Category | Representative examples (type) | Optimizes for | How we differ |
 | --- | --- | --- | --- |
-| Assessment/grading-oriented | Handwritten-math grading and partial-credit tools (IntelGrader, Ed.ai, GradingPal, etc.) | Administrative efficiency: scores, error tags, worksheets | We **don't assign grades**; output is a falsifiable hypothesis + differentiating experiment, optimizing **teaching decision quality** |
-| Student-facing solve-it apps | Photo-to-solution apps | Steps and answers | We're built for teacher decisions; the demo does not present "copy the answer" as its main path |
-| Diagnosis/tutoring platforms | Eedi, Glimmer, etc. | Misconceptions + intervention, some with RCTs/knowledge graphs | We focus on **everyday paper-based, open-ended handwritten derivation** + **a differentiating experiment with a verifiable prediction**; we do not claim RCT-validated efficacy in 8 days |
+| Assessment/grading-oriented | Handwritten-math grading and partial-credit tools (IntelGrader, Ed.ai, GradingPal, etc.) | Administrative efficiency: scores, error tags, worksheets | We **don't assign grades**; output is an evidence-linked hypothesis + differentiating probe, optimizing **teaching decision quality** |
+| Student-facing solve-it apps | Photo-to-solution apps | Steps and answers | Product is designed for teacher decisions; planned demo does not present "copy the answer" as its main path |
+| Diagnosis/tutoring platforms | Eedi, Glimmer, etc. | Misconceptions + intervention, some with RCTs/knowledge graphs | We focus on **everyday paper-based, open-ended handwritten derivation** + **a differentiating probe with verified predictions**; we do not claim RCT-validated efficacy |
 
-Honesty: Eedi and similar products have a longer validation track record. Named products in the table are **category examples only** — capability descriptions are **category-level generalizations, and individual product capabilities have not been individually verified against official technical documentation**. If Devpost keeps named comparisons, official documentation must be added first; otherwise switch to anonymous category language. What 8 days can deliver = blind test + human-in-the-loop + a demoable closed loop; copy will **not** say "scientifically validated."
+Honesty: Eedi and similar products have a longer validation track record. Named products in the table are **category examples only** — capability descriptions are **category-level generalizations, and individual product capabilities have not been individually verified against official technical documentation**. If public copy keeps named comparisons, official documentation must be added first; otherwise switch to anonymous category language. A first version can demonstrate a benchmark and human-review loop; copy will **not** say "scientifically validated."
 
-## 4. The Solution: Hypothesis → Evidence → Differentiating Experiment → Confirmation
+## 4. The Solution: Hypothesis → Evidence → Differentiating Probe → Teacher Review
 
-1. Teacher uploads a photo of a student's handwritten homework (demo main path uses pre-validated samples + live upload as a bonus).
+1. Teacher uploads a photo of synthetic/de-identified handwritten homework (planned demo path starts with pre-validated samples; live upload remains conditional on stable behavior).
 2. **Reasoning pipeline (Correct Answer Trap guard)**: first checks step-to-step mathematical validity/logical coherence, then compares against the final answer — it does **not** skip process-checking just because the final answer is correct. An answer-correct-but-process-wrong case can still surface candidate mal-rules (included in demo and blind test).
 3. The model visually understands the handwritten derivation and returns a **fixed structured output**:
 
@@ -108,83 +110,100 @@ Honesty: Eedi and similar products have a longer validation track record. Named 
     }
   ],
   "alternative_explanation": "Could also be a transcription slip (only this one step is wrong, all other steps correct)",
-  "verification_experiment": {
+  "differentiating_probe": {
     "question": "Expand -4(b - 3)",
     "correct_answer": "-4b + 12",
     "predictions": [
       { "candidate_id": "NEG_DIST", "predicted_answer": "-4b - 12" },
       { "candidate_id": "DIST_FIRST_ONLY", "predicted_answer": "-4b - 3" }
     ],
-    "convergence_rule": "Answer matches a candidate's prediction -> that candidate is supported; matches correct_answer -> both candidates downweighted, leaning toward slip; matches neither -> abstain, route to teacher for verbal confirmation"
+    "evidence_update_rule": "Answer matches a candidate prediction -> that candidate gains support; matches correct_answer -> both candidates lose support, leaning toward slip; matches neither -> abstain or ask another probe, then route to teacher review"
   },
   "abstain_reason": null
 }
 ```
 
-**`error_disposition` heuristic** (explicitly a heuristic, not a calibrated threshold; evaluable within 8 days):
+**`error_disposition` heuristic** (explicitly a heuristic, not a calibrated threshold; evaluable in the seed benchmark):
 
 | Value | Trigger condition (summary) | Downstream |
 | --- | --- | --- |
-| `likely_slip` | Only 1 step wrong and surrounding steps are self-consistent; or the error pattern matches no taxonomy mal-rule | Does not enter the "misconception" bucket of the heatmap; recommend teacher verbal confirmation, may offer a low-cost redo |
-| `candidate_mal_rule` | Error maps to the taxonomy; or the same rule is reproducible across steps | Surfaces candidates + differentiating experiment |
-| `ambiguous` | Both slip and mal-rule are plausible | Must run differentiating experiment; if no discriminating question can be generated -> abstain |
+| `likely_slip` | Only 1 step wrong and surrounding steps are self-consistent; or the error pattern matches no taxonomy mal-rule | Does not enter the "misconception" bucket of the aggregate; recommend teacher review, may offer a low-cost redo |
+| `candidate_mal_rule` | Error maps to the taxonomy; or the same rule is reproducible across steps | Surfaces candidates + differentiating probe |
+| `ambiguous` | Both slip and mal-rule are plausible | Must run differentiating probe; if no discriminating question can be generated -> abstain |
 | `insufficient_input` | Image is blurry, symbol ambiguity would change the math (2/z, x/multiplication sign), or steps are missing to the point reasoning is impossible | `diagnosis_status=insufficient_evidence`, forced abstain |
 
 **Input-uncertainty rule**: if the model cannot parse, with reasonable confidence, a symbol whose reading would change the mathematical meaning, it must set `input_uncertainty` describing what's missing — it is **forbidden** to force out a misconception label (avoids hallucinated diagnoses).
 
-4. **Differentiating experiment** (this product's core innovation — not "generate one more problem," but "generate an experiment with a verifiable prediction"):
+4. **Differentiating probe** (this product's core innovation — not "generate one more problem," but "ask a question with independently verified candidate predictions"):
    - Before generating, predicted answers are derived for every candidate pair; **if two candidates predict the same answer, regenerate the question; if no discriminating question can be generated, abstain.**
-   - After the student answers, the diagnosis is updated per the convergence rule — this makes the AI's reasoning falsifiable by the next piece of data.
-5. Teacher confirms/rejects with one click -> only after confirmation does it enter the class heatmap and downstream handling.
-6. **Post-diagnosis teacher action (closes the loop even with zero generation)**: after confirmation, the UI surfaces an actionable next step — (a) class-level aggregate, "N% share this misconception, spend 10 minutes next period teaching X"; (b) reuse the differentiating question as a formative check; (c) optional P2 template practice. Free-form microlesson generation is **not** a required demo condition.
-7. Targeted practice (P2): time permitting, a confirmed root cause triggers **template-based** practice; no promise of real-time free-form item generation (correctness and curriculum alignment of generated items are not proven within 8 days).
+   - After the student answers, candidate support is updated per the evidence rule. The new observation can support, weaken, or fail to distinguish candidates.
+5. Teacher accepts/rejects the suggested classification with one click. Acceptance means "useful enough for this workflow," not ground-truth proof of a student's mental state. Only accepted results enter a class aggregate.
+6. **Post-review teacher action (closes the loop even with zero generation)**: the UI can surface (a) a class-level aggregate, "N% have evidence consistent with this misconception; review before reteaching"; (b) the differentiating question as a formative check; and (c) optional template practice. Free-form microlesson generation is outside the required path.
+7. Targeted practice (roadmap): a supported and teacher-accepted hypothesis may trigger **template-based** practice. Free-form item correctness and curriculum alignment require separate validation.
 
 **Three-value diagnosis status** (replaces v4's per-candidate confidence bands — per-candidate grading was self-contradictory with the "no competing explanation" definition, and self-reported LLM confidence is uncalibrated):
 
 - `single_supported_hypothesis`: only one candidate has supporting evidence
-- `multiple_plausible_hypotheses`: multiple plausible candidates -> triggers the differentiating experiment
+- `multiple_plausible_hypotheses`: multiple plausible candidates -> triggers the differentiating probe
 - `insufficient_evidence`: image/derivation insufficient or `input_uncertainty` set -> abstain, state what's missing
 - No numeric confidence is ever displayed; numeric calibration stays on the roadmap (requires a calibration set).
 
-**Depth of Codex + GPT-5.6 usage** (Build Week judging criterion ①, official language focuses on depth of Codex collaboration): multimodal handwriting understanding (not an OCR pipeline bolted on — it understands the derivation relationship between steps) x abductive reasoning (working backward from a wrong result to candidate rules) x structured output (fixed schema, aggregable, evaluable) x **differentiating-experiment generation** (with prediction derivation and self-checking) x abstain mechanism. "Hypothesis -> evidence -> experiment -> convergence" is a complete reasoning loop, not a single prompt call. On the build side: the whole pipeline, eval harness, and UI were built with Codex as an agentic workflow collaborator, with the README documenting the collaboration process (maps to judging criterion ①).
+**Designed depth of Codex + GPT-5.6 usage** (Build Week judging criterion ①): multimodal handwriting parsing, abductive candidate generation, fixed structured output, evidence localization, differentiating-probe generation, and abstention. This is the intended reasoning loop. Build claims must be added only with dated code, session logs, runnable setup, and benchmark artifacts.
 
-## 5. Reusability: Decoupling the Framework from the AI (Principle 02)
+## 5. Technical Architecture and Verification Boundaries (Principles 02 and 06)
 
+```text
+Photo intake + client-side PII warning/redaction
+  -> multimodal parse (normalized steps, bounding boxes, alternative parses)
+  -> deterministic algebra verifier (equivalence + first invalid transition)
+  -> taxonomy retrieval + candidate hypothesis generation
+  -> template-constrained differentiating-probe generator
+  -> symbolic solver verifies distinct candidate predictions
+  -> student-response matcher updates evidence state
+  -> teacher review
+  -> de-identified event store + class aggregation
 ```
-+-----------------------------------------------------------+
-|  Error-Archaeology Pipeline (domain-agnostic core)         |
-|  Artifact -> Candidate hypotheses -> Evidence localization  |
-|  -> Differentiating experiment -> Teacher confirmation      |
-|  -> Aggregation                                              |
-+-----------------------------------------------------------+
-       ^ pluggable            ^ pluggable         ^ pluggable
-   AI reasoning engine    Taxonomy config      Input/output adapter
-  (model ID is config)   (JSON, per domain)   (MVP: photo upload only)
-```
 
-**Pull the LLM out and the framework still holds**: "collect artifacts -> attribute candidate errors -> discriminate/verify -> aggregate into a teaching decision" can be executed by a human — it is, in fact, the standard error-analysis workflow in special education and tutoring. LLMs are what make this methodology scalable for the first time.
+The model proposes parses, hypotheses, and probe candidates. It does **not** certify its own mathematics. A deterministic algebra layer checks step equivalence, and a symbolic solver rejects probes whose predicted answers collide. If parsing alternatives change the mathematics, the pipeline abstains. This separation makes failures attributable to perception, mathematical validation, hypothesis generation, or probe construction rather than hiding every failure inside one prompt.
 
-Cross-domain reuse (coding-bug misconceptions, first-language-transfer errors in language learning, clinical reasoning in medical education) is an **architectural inference + roadmap item** — not demoed, not claimed as proven, within the MVP.
+Pluggable boundaries are limited and explicit:
 
-## 6. Universality: Deployment Flexibility (Principle 03)
+- **Reasoning engine:** model identifier and reasoning effort are configuration; model tiers must be benchmarked for quality, latency, and cost.
+- **Taxonomy:** versioned curriculum-specific misconception rules with source provenance. Changing standards requires taxonomy review and regression tests, not merely replacing one JSON file.
+- **Input adapter:** photo upload for the first version; batch scanning and LMS ingestion are separate products.
+- **Output contract:** versioned structured result consumed by review UI, evaluation harness, and aggregate store.
 
-- Taxonomy = a JSON config file: switching state standards (Common Core <-> Texas TEKS) = swapping a file — but **swapping taxonomy is not the same as swapping customers**; a real customer migration also touches input format, privacy agreements, and SIS integration.
-- Honest current state: the adapter and schema contract are **not yet defined**, and the amount of code change needed to onboard a new customer has **not been validated with any real customer**. What the MVP delivers is two decoupling facts — "taxonomy externalized as config" and "model ID externalized as config" — everything else (LMS export, LTI 1.3/OneRoster/Ed-Fi, Clever/ClassLink SSO) is roadmap.
-- Positioned as a **diagnosis-layer add-on** to existing assessment systems (i-Ready, NWEA MAP), not a replacement: they screen "who's behind," we answer "why" — procurement-wise this is an add-on purchase, not a system swap.
+Cross-domain reuse remains an architectural hypothesis. Coding, language transfer, and clinical reasoning require different evidence models, validators, risks, and buyers.
 
-## 7. Commercial Value: Three Roles in the Value Chain (Principle 05)
+## 6. Target User and Workflow (Principles 03 and 05)
 
-| Role | Who | Notes |
+The beachhead is **Grade 7–9 intervention teachers and tutor coordinators managing small algebra cohorts**, not every classroom teacher.
+
+| Role | Initial definition | Job to be done |
 | --- | --- | --- |
-| **User** | Teacher (daily use), student (receives differentiating questions and practice) | Users don't pay |
-| **Payer** | School district / state government (hypothesis, to be validated via interviews) | Budget context: Title I-A is roughly $18.4B [8] — this **only shows payer budget exists; it does not show this product qualifies, is procurable, or is desired**. The procurement path is a hypothesis, to be strengthened via buyer interviews. State-level tutoring-fund examples (Tennessee/Texas) are secondhand policy summaries, and Tennessee's funding is actually for 4th-grade **literacy** tutoring, not math — demoted to a policy appendix, not part of the core argument |
-| **Incumbent** | Tailwind: tutoring/coaching businesses, curriculum publishers (sell-the-shovel strategy). Headwind: diagnostic-assessment vendors (i-Ready/NWEA) — expect them to push back on validity/reliability grounds; the direct response is the blind test in §10 | |
+| **User** | Intervention teacher or tutor | Triage incorrect work before the next support session |
+| **Champion** | Math curriculum or intervention lead | Standardize diagnosis and review patterns across staff |
+| **Buyer** | Tutoring/intervention-program operator | Increase useful diagnostic coverage per educator-hour |
+| **Beneficiary** | Student | Receive a probe and intervention matched to observed evidence |
 
-**We don't prove market size in 8 days — we prove real demand.** Four structured interviews (20 min each), validating User and Payer separately:
+Initial workflow: select or batch-upload incorrect work -> review candidate hypotheses and evidence -> assign one verified probe -> inspect response -> accept, revise, or reject suggested classification -> use aggregate only after review. One-photo-at-a-time grading for a full class is not assumed efficient and must be tested.
 
-- Validate **User**: 2 US Grade 7-9 math teachers (how long do they spend analyzing wrong answers each week? how do they group students? which step of the flow would they trust enough to confirm?) + 1 tutor coordinator (does a diagnostic report change how tutoring resources are allocated?).
-- Validate **Payer**: 1 district administrator or tutoring-program buyer (what's the procurement decision process? what evidence gets something into a pilot?) — teacher interviews can only validate User; Payer must be asked separately.
-- Output: quotable interview notes go into the Devpost submission (with permission for public citation); the demo can say "Reviewed by one US middle-school math educator and one mathematics-education researcher," and will **not** say "scientifically validated."
+Remote interviews validate workflow assumptions, not demand by themselves: at least two Grade 7–9 math educators, one tutor coordinator, and one buyer. Measure current diagnosis time, acceptable review latency, false-positive tolerance, whether the probe changes the next teaching action, purchasing authority, and pilot evidence requirements.
+
+## 7. Commercial Model and Evidence-Led US Entry (Principle 05)
+
+Recommended market sequence:
+
+1. **Intervention and tutoring providers:** annual platform fee plus usage-based analysis. Closest labor-cost comparison and shortest path to a bounded pilot.
+2. **Embedded diagnosis API:** platform fee plus usage for curriculum, tutoring, or assessment vendors after the output contract stabilizes.
+3. **District license:** annual per-school or per-student contract after privacy review, integrations, and outcome evidence.
+4. **State procurement:** long-term channel, not initial payer assumption.
+
+No price is claimed before interviews and cost measurement. Pilot economics must report analyses per active student, model and retry cost per completed analysis, educator-support cost, gross margin, activation, four-week retention, paid conversion, and expansion behavior. Title I-A and other public budgets show funding context only; they do not establish eligibility, procurement, or willingness to pay.
+
+Building outside the US is not a product limitation if evidence provenance is visible. Public sources establish system facts: NAEP for problem scale, NCES for schools/students/district structure, public tutoring data for channel adjacency, official privacy guidance for data controls, and released assessment items for test inputs. Those sources cannot establish daily workflow or willingness to pay; remote US educator interviews, public RFP/contract review, and pilot behavior must complete the evidence chain. After those interviews occur, suggested reviewer framing is: **"Designed in Taiwan from traceable US public evidence, then validated remotely with US educators."**
+
+NCES reports 49.4 million public-school students across 99,297 schools and 19,186 operating districts in 2023–24 [14]. This supports market structure and procurement-fragmentation analysis, not a claim that every student is addressable. UNESCO reports that around 40% of children reach minimum mathematics proficiency at expected primary-completion age [15]. That supports global problem context, not product portability; language, notation, curriculum, workflow, and privacy still require local validation.
 
 ---
 
@@ -192,31 +211,33 @@ Cross-domain reuse (coding-bug misconceptions, first-language-transfer errors in
 
 ## 8. Feasibility Boundary: Current / Target / Acceptance (Principle 06)
 
-> Honest statement: as of 2026-07-14, the repo contains only proposal documents — **no component has been started.** The table below is a delivery contract, not a status report.
+> As of 2026-07-22, this repository contains documents only. Every component below is **DESIGNED**, not BUILT or VALIDATED. A later status change requires runnable code and recorded evidence.
 
-| Component | Current | Demo target (7/21) | Acceptance test (how to prove it's done) |
+| Component | Current | First implementation target | Acceptance evidence |
 | --- | --- | --- | --- |
-| Photo -> candidate hypotheses + evidence + disposition + abstain | Not started | Real, working: 12 algebra samples (incl. CAT) + live upload as a bonus | Repeatable eval harness: 100% schema-valid rate, evidence-step accuracy, disposition agreement rate, correct abstain/CAT triggering |
-| Differentiating experiment (prediction + convergence) | Not started | Real, working | Every candidate pair has distinct predicted answers (otherwise abstain); 10 sets manually verified for prediction logic |
-| Teacher confirm/reject flow | Not started | Real, working | End-to-end click flow, no mocked API; rejected diagnoses do not enter the heatmap |
-| Class heatmap | Not started | Semi-real: synthetic class distribution, clearly labeled in demo | Chart driven by real diagnosis outputs + data explicitly marked synthetic |
-| Image not persisted / auto-deleted | Not started | Real, working | Image deleted immediately after processing; storage check comes back empty |
-| Targeted practice | Not started | P2: template-based, dropped if time runs short | — |
-| Accounts / LMS integration / batch scanning / multi-subject | Not building | Listed on roadmap | — |
+| Parse + evidence localization | DESIGNED | 12 pre-validated algebra samples; live upload only after stable | Schema validity, transcription accuracy, evidence-step accuracy, ambiguity cases abstain |
+| Deterministic algebra verification | DESIGNED | One-variable linear equations and distribution | Known-valid and known-invalid transitions checked independently of model output |
+| Candidate hypothesis generation | DESIGNED | Versioned taxonomy with 8–12 nodes | Expected hypothesis appears in top two on external holdout |
+| Differentiating probe | DESIGNED | Template-constrained generation | Symbolic verifier confirms distinct predictions or pipeline abstains |
+| Teacher review flow | DESIGNED | Accept, revise, reject | Rejected results never enter aggregate; audit event records decision |
+| Class aggregate | DESIGNED | Synthetic demonstration data, labeled visibly | Derived from reviewed structured events only |
+| Image handling | DESIGNED | No application persistence | Storage and log inspection; platform retention boundary disclosed |
+| LMS, accounts, batch scanning, multi-subject | ROADMAP | Not part of first version | Separate discovery and acceptance plan |
 
-Scope: a single middle-school algebra unit (one-variable linear equations + the distributive property), taxonomy of 8-12 nodes. 2 people x half-time x 8 days; every demo claim will be stated as real or simulated, out loud.
+Scope remains one middle-school algebra unit. A polished constrained path is feasible; production-grade handwriting coverage, district integration, and learning-effect claims are not.
 
 ## 9. Failure Cost and Risk Design (Principle 07)
 
 Consequences of misdiagnosis: a teacher acts on a wrong diagnosis -> wasted teaching time, students mislabeled, **alert fatigue** (treating a slip as a misconception). This is a medium-risk domain; safeguards:
 
 - **Hypothesis, not verdict**: output is always `candidate_misconceptions[]` + `alternative_explanation` + `error_disposition`; UI copy never uses an assertive sentence like "this student's root cause is."
-- **Teacher-in-the-loop / educator co-pilot**: only after the teacher confirms/rejects does a result enter the heatmap or trigger practice for a student. The AI is staff, not a judge; the teacher retains veto power.
-- **Abstain mechanism**: unclear image, ambiguous symbols, insufficient derivation, or a differentiating experiment that can't generate distinguishable predictions -> no forced diagnosis, show what's missing instead.
+- **Teacher-in-the-loop / educator co-pilot**: only after the teacher accepts, revises, or rejects a suggestion does it enter an aggregate or trigger practice. Acceptance records workflow usefulness, not psychological ground truth. The teacher retains veto power.
+- **Abstain mechanism**: unclear image, ambiguous symbols, insufficient derivation, or a differentiating probe that can't generate distinguishable predictions -> no forced diagnosis, show what's missing instead.
 - **Mandatory evidence**: every candidate hypothesis must carry `evidence_steps` a teacher can verify in 10 seconds — a diagnosis that can be falsified is a responsible diagnosis.
 - **Correct Answer Trap**: steps take priority over the final answer; the blind test includes "answer correct, process wrong" samples (§10).
-- **Slip vs. mal-rule**: `error_disposition` heuristic + differentiating experiment; a single isolated error defaults to *not* entering the misconception heatmap unless the teacher confirms it.
-- Technical risk: unstable handwriting recognition -> demo main path uses a pre-validated sample set; concerns about "just a prompt wrapper" -> externalized taxonomy + published blind-test data (§10).
+- **Slip vs. mal-rule**: `error_disposition` heuristic + differentiating probe; a single isolated error defaults to *not* entering the misconception aggregate unless a teacher accepts it after review.
+- **Automation-bias control**: periodically blind reviewers to the model label, record revisions separately from accepts, and audit whether teachers disproportionately accept plausible-sounding suggestions.
+- Technical risk: unstable handwriting recognition -> first path uses a pre-validated sample set; "just a prompt wrapper" risk -> deterministic verification, versioned taxonomy, and published benchmark artifacts (§10).
 
 ## 10. Data Availability and Validity Verification (Principle 08)
 
@@ -225,15 +246,15 @@ Consequences of misdiagnosis: a teacher acts on a wrong diagnosis -> wasted teac
 | Need | Source | Access path |
 | --- | --- | --- |
 | Problems | NAEP publicly released items (public domain) + self-authored | Already public, zero cost [1] |
-| Handwritten error samples | **Team-produced realistic samples** (see blind test design below) | Achievable within 8 days; no real student data needed |
+| Handwritten error samples | **Team-produced realistic samples** (see benchmark design below) | Available without real student data; not representative of classroom prevalence |
 | Taxonomy | Published algebra-misconception literature (DAAS, three concepts [6]; error-analysis research) | Public literature, cited in README |
 | Real student data | Not used in the MVP | Production stage: district agreement + de-identification, roadmap |
 
-**Compliance statement**: we do not say "no FERPA/COPPA risk." Correct framing: **the demo only allows synthetic or de-identified samples; uploading real student data is explicitly forbidden; at the application layer, images are not persisted — deleted automatically after processing (listed as an acceptance item in §8; if it can't be implemented, the claim is cut).** If a reviewer uploads a real assignment with a name on it, the system shows a de-identification reminder.
+**Compliance statement**: we do not say "no FERPA/COPPA risk." The planned demo must allow only synthetic or de-identified samples and explicitly forbid real student data. The application should avoid persisting images, but public copy may claim deletion only after storage and log inspection passes (§8). A de-identification reminder is necessary but does not replace access controls or policy enforcement.
 
 **Platform-layer boundary** [13]: OpenAI API inputs/outputs are by default not used for model training, but the platform may by default retain abuse-monitoring logs for **up to 30 days**; Zero Data Retention applies only to approved organizations and eligible endpoints. Application-layer "delete after processing" is **not** the same as end-to-end zero retention — copy will **not** claim zero retention.
 
-**Blind test set design (30-36 samples, category totals reconcile)**:
+**Technical benchmark seed set (30-36 samples)**:
 
 | Category | Count |
 | --- | --- |
@@ -244,54 +265,67 @@ Consequences of misdiagnosis: a teacher acts on a wrong diagnosis -> wasted teac
 | **Correct Answer Trap** (final answer correct, process wrong) | 2-4 |
 | **Total** | **30-36** |
 
-- Annotation independence: two team members independently label and seal the answer key first, before any prompt tuning; the **holdout (>=8 samples, completely untouched during tuning) is separately blind-labeled by an outside math teacher** — self-labeling and self-testing by the same team isn't independent enough.
-- **Repeatable eval harness** (not called "deterministic" — model output isn't necessarily deterministic): records model snapshot, prompt version, and temperature/reasoning config, so the same version can be rerun and compared; reports include misconception-classification macro-F1, evidence-step accuracy, abstain accuracy, `error_disposition` agreement with annotations, CAT case recall, teacher confirmation time, and failure cases.
-- Even at 75% accuracy, honestly showing errors and safety mechanisms is more credible than "every built-in sample passes."
+- This seed set demonstrates technical behavior only. Team-produced samples do not represent classroom prevalence or natural handwriting noise, and 16-20 error cases cannot support a stable 8-10-class macro-F1 claim.
+- Two annotators independently label expected parse, first invalid transition, plausible hypothesis set, and disposition. Report agreement; adjudicate disagreements before sealing the holdout. An outside math educator labels the full holdout without seeing model output.
+- Run each model configuration multiple times and record model snapshot, prompt/taxonomy version, reasoning configuration, latency, token/image usage, retries, and cost.
+
+**Evaluation layers and decision metrics**:
+
+| Layer | Primary metric | What it establishes |
+| --- | --- | --- |
+| Perception | Symbol/step transcription accuracy; evidence localization | Whether image understanding preserves relevant mathematics |
+| Math validation | First-invalid-transition accuracy | Whether deterministic checking finds the right break |
+| Hypothesis generation | Expected hypothesis in top two; unsupported-hypothesis rate | Whether candidates are useful without implying unique ground truth |
+| Probe construction | Symbolically verified distinct predictions | Whether the next question can discriminate candidates |
+| Safety | Error rate at each abstention-coverage level | Whether abstention reduces harmful suggestions |
+| Workflow | Median teacher review time; accept/revise/reject rates | Whether product saves work and supports decisions |
+| Learning signal | Delayed transfer-item performance | Whether product may improve learning; requires field study |
+
+Publish case-level failures. Do not headline one aggregate “accuracy” number from this seed set.
 
 ## 11. Demo Visibility: How We'll Pitch It (Principle 09)
 
-The output is an **interactive website** (public Vercel URL, judges can try it themselves). 3-minute main path:
+Target output is an **interactive website**. Until deployed, this section describes intended demonstration, not current functionality. Three-minute main path:
 
 1. **0:00** Hook: two pieces of handwritten homework side by side with the **same wrong answer, different reasoning** — "same wrong answer, completely different cause"; optionally a third card showing a **correct-answer-wrong-process** case (Correct Answer Trap).
 2. **0:20** Upload a homework photo.
 3. **0:50** Model proposes **two candidate root-cause hypotheses** + `error_disposition`, each with its evidence highlighted at the student's step 2.
-4. **1:20** Generates a **differentiating experiment**: one question with each candidate's predicted answer shown side by side — "if he answers this way, it's cause one; that way, cause two."
-5. **1:50** Student's answer -> matches one prediction -> that candidate is supported, the other ruled out.
-6. **2:15** Teacher confirms with one click -> class heatmap + **next-period action**: "40% of the class shares this misconception, spend 10 minutes next period on it" + the differentiating question is reusable.
-7. **2:40** Show **holdout blind-test, abstain, CAT, and slip** cases — including cases the model got wrong, presented honestly.
+4. **1:20** Generates a verified **differentiating probe**: one question with each candidate's predicted answer shown side by side.
+5. **1:50** Student response matches one prediction -> that candidate gains support; unmatched responses trigger abstention or another probe.
+6. **2:15** Teacher accepts, revises, or rejects -> reviewed class aggregate + next-period action.
+7. **2:40** Show benchmark failures, abstention, CAT, and slip cases honestly.
 
-Impact narrative uses "teacher interviews + blind-test data + time saved," and downplays the $31T figure. 2 minutes of judge interaction: click through remaining samples, upload their own photo, look at the abstain column and the reject flow.
+Impact narrative may use completed teacher interviews, benchmark results, and measured review time. If those results do not exist, remove the claims. Keep the $31T model estimate out of the pitch. Any public live URL must expose synthetic/de-identified samples and a visible abstention/reject path.
 
-Maps to the four judging criteria: technical implementation (candidate hypotheses + evidence localization + structured output + differentiating experiment + abstain), design (complete teacher decision flow), impact (interviews + blind-test data + time saved), creativity (the AI doesn't hand down a verdict — it proposes a falsifiable hypothesis, then converges via an experiment with a prediction).
+Maps to four judging criteria only after build evidence exists: technical implementation (parse + deterministic verification + structured hypotheses + verified probe + abstention), design (complete teacher decision flow), impact (interviews + workflow time + benchmark evidence), creativity (AI proposes testable hypotheses rather than issuing a verdict).
 
 ## 12. Defensibility Strategy (Principle 10)
 
-Honest premise: **at the end of 8 days we have no built-in moat** — the blind test set is only 30-36 samples, not a strong moat. What follows is a defensibility **strategy** (how a moat could accumulate with usage), not existing assets:
+Honest premise: current repository has no built-in moat. What follows is a defensibility strategy, not an existing asset:
 
-1. **Confirmation-data flywheel (strategy)**: every teacher confirm/reject is one labeled data point; the blind test set is the seed of an evaluation asset that can grow into a private calibration/eval set as deployment expands.
-2. **Domain know-how encoding (in progress)**: converting misconception literature into an **executable taxonomy** (8-12 nodes; optionally with `prerequisite_of` edges) + differentiating-experiment generation with a discriminability check — this is a cross-disciplinary skill (educational measurement x engineering) with a higher replication barrier than a prompt.
-3. **Workflow lock-in (strategy)**: sitting in the gap between "screening (i-Ready) -> **diagnosis** -> remediation (tutoring/course placement)," with both ends acting as upstream/downstream data.
-4. The model itself is not the moat — the model layer is swappable via config (§5); value accrues in the framework, the eval set, and confirmation data.
+1. **Outcome-linked evidence sequence:** artifact + candidates + verified probe + student response + teacher revision + later transfer result. Accept/reject clicks alone are noisy labels and can reflect automation bias.
+2. **Executable, source-provenanced taxonomy:** misconception rules, counterexamples, probe templates, and regression cases—not a JSON list alone.
+3. **Calibration and safety benchmark:** natural handwriting, ambiguity, slips, correct-answer traps, selective-risk curves, and model-version history.
+4. **Workflow integration:** reviewed events positioned between screening and intervention. Integration becomes defensible only after repeated use and renewal.
+5. **Data rights:** contracts must permit privacy-preserving improvement; otherwise customer data cannot be assumed to become a proprietary asset.
 
-**Not built in 8 days, and not written up as an existing moat**: full-subject Graph-RAG, multi-model ensembles, QLoRA fine-tuning. If mentioned in copy at all, it's a single roadmap sentence: "in production, taxonomy prerequisite edges could be expanded into graph retrieval; a small classifier could be added for cross-checking" — this does **not** occupy demo compute or narrative.
+**Not built and not written up as an existing moat**: full-subject Graph-RAG, multi-model ensembles, and fine-tuning. These remain optional future techniques, not substitutes for validation.
 
-## 13. Eight-Day Milestones (reordered P0 -> P2)
+## 13. Implementation Gates
 
-> Current state: the repo only has documents — already a day behind. **v7 is the literature revision; documentation work stops here. No more long-form writing — building starts today.**
+The original eight-day schedule expired without code evidence in this repository. Preserve Git history as audit record; use capability gates instead of retroactive completion language.
 
-| Priority | Deliverable | Date |
+| Gate | Deliverable | Exit evidence |
 | --- | --- | --- |
-| — | **Day-1 gate**: confirm GPT-5.6's official model ID + API access; Next.js scaffold | 7/14 |
-| P0 | 12 algebra samples + fixed structured output (disposition/evidence_steps/abstain/CAT) + repeatable eval harness | 7/14-15 |
-| P0 | Full teacher flow: pick sample/upload -> view candidate causes -> check evidence -> confirm/reject -> class aggregation + next-period action | 7/16-17 |
-| P1 | Differentiating experiment: prediction derivation + discriminability check + post-answer convergence | 7/17-18 |
-| P1 | Blind test set of 30-36 (incl. 2-4 CAT; independent sealed annotation + external teacher blind-labeled holdout) + 4 interviews (parallel, owned by PM) | 7/14-19 |
-| P2 | Template-based targeted practice (only if time allows) | 7/19 |
-| — | Feature freeze the night of 7/19; demo video + Devpost + README on 7/20; submit 7/21 12:00 PDT | 7/20-21 |
+| 0 | Model access, cost/latency probe, app scaffold | Recorded model identifier, sample request, reproducible setup |
+| 1 | Parse + deterministic algebra check | Unit cases plus 12 artifact runs with separated perception/math errors |
+| 2 | Candidate schema + taxonomy | Versioned contract, provenance, top-two benchmark |
+| 3 | Verified differentiating probe | Symbolic discriminability tests and abstention path |
+| 4 | Teacher review + aggregate | Accept/revise/reject audit flow; rejected events excluded |
+| 5 | External holdout + workflow study | Sealed benchmark, educator labels, review-time results, failures |
+| 6 | Pilot economics and privacy review | Cost per completed analysis, retention settings, buyer feedback |
 
-**Ongoing discipline**: daily commits + retained Codex session logs — this simultaneously satisfies both the in-window work evidence needed under the New & Existing Work clause (the repo existed before 7/13 but contained only planning docs) and the `/feedback` Codex Session ID submission requirement.
-
-Resource allocation: 60% product and reliable demo, 20% blind test and eval, 10% interviews, 10% academic reviewer outreach and Devpost copy. Stop chasing an academic reviewer if there's no response within 24 hours — don't let a credential hunt delay the product.
+Daily commits and retained Codex session logs remain necessary evidence of implementation work. Documentation must never advance a component from DESIGNED to BUILT or VALIDATED without its exit evidence.
 
 ## 14. Reviewer Pressure Q&A (rapid-fire)
 
@@ -299,23 +333,23 @@ Four categories of pointed questions drawn from an external deep-review pass; th
 
 **Q1: How do you avoid hallucinated diagnoses given ambiguous handwriting / symbol misreads (2 vs. z, x vs. multiplication sign)?**
 
-A: Multimodal understanding, not a standalone OCR pipeline; any ambiguity that would change the math triggers `input_uncertainty` + `insufficient_evidence` abstain, stating exactly which cell is unclear. Demo main path uses pre-validated samples; live upload demonstrates abstaining, which is worth more credit than guessing.
+A: Multimodal parsing plus deterministic algebra verification; any ambiguity that changes the mathematics triggers `input_uncertainty` + `insufficient_evidence`, stating exactly what is unclear. Planned demo starts with pre-validated samples. Live upload is shown only after ambiguity and abstention behavior passes its benchmark.
 
 **Q2: How do you distinguish carelessness (slip) from a systemic misconception (mal-rule)?**
 
-A: `error_disposition` heuristic (an isolated single-step error -> `likely_slip`; maps to taxonomy / reproducible -> `candidate_mal_rule`) + convergence via the differentiating experiment. The blind test includes 4 slip samples. We do not claim a perfect threshold exists; teacher confirmation is the final gate, which prevents alert fatigue.
+A: `error_disposition` heuristic (an isolated single-step error -> `likely_slip`; maps to taxonomy / reproducible -> `candidate_mal_rule`) + evidence updates from the differentiating probe. The benchmark includes slip samples. We do not claim a perfect threshold exists; teacher review controls downstream action but does not establish psychological ground truth.
 
 **Q3: FERPA/COPPA and whether data is used for training?**
 
-A: The demo uses **only** synthetic or de-identified samples; uploading real student PII is explicitly forbidden; at the application layer, images are not persisted after processing (§8 acceptance item). OpenAI API inputs/outputs are by default not used for model training, but the platform may by default retain abuse-monitoring logs for up to 30 days; ZDR is limited to approved organizations and eligible endpoints [13] — so we **do not claim** end-to-end zero retention. Production district deployments would go through a separate DPA/agreement process — that's roadmap, not something we pretend is already compliance-certified in 8 days.
+A: The planned public demo permits **only** synthetic or de-identified samples; uploading real student PII is explicitly forbidden. Application persistence must be tested before claiming images are deleted (§8). OpenAI API inputs/outputs are not used for training by default, but abuse-monitoring logs may be retained for up to 30 days; ZDR is limited to approved organizations and eligible endpoints [13]. Production district deployment requires a separate DPA, access controls, deletion policy, subprocessor review, and security assessment.
 
 **Q4: What about the quality and curriculum alignment of the post-diagnosis remediation content?**
 
-A: The MVP closes the loop at the teacher-decision level (grouping, what to teach next period, reusing the differentiating question) — it does **not** depend on free-form item generation. P2 is template-based practice only. The correctness and TEKS/CCSS alignment of freely generated items is a production-quality concern; we neither promise nor demo it as a main-path capability within 8 days.
+A: The first version closes the loop at teacher review and next-action selection; it does **not** depend on free-form item generation. Practice remains template-based. Freely generated item correctness and standards alignment require a separate validation program.
 
 ---
 
-## References (US-converged)
+## References
 
 1. NCES. _2024 NAEP Mathematics Assessment: Grade 8 National Trends_. <https://www.nationsreportcard.gov/reports/mathematics/2024/g4_8/national-trends/?grade=8> (28% at/above Proficient, 61% at/above Basic, 39% below Basic; national average still below 2019)
 2. National Assessment Governing Board. _10 Takeaways from the 2024 NAEP Results_. <https://www.nagb.gov/powered-by-naep/the-2024-nations-report-card/10-takeaways-from-2024-naep-results.html> (national average not recovered; divergence between high and low percentiles)
@@ -330,5 +364,7 @@ A: The MVP closes the loop at the teacher-decision level (grouping, what to teac
 11. Hanushek, E. A., & Strauss, B. (2024). "United States: The Size and Variation of the Pandemic Learning Losses." <https://link.springer.com/chapter/10.1007/978-3-031-69284-0_13> ($31T is a model estimate of 21st-century present-value GDP)
 12. IES. _Bridging the Gap: Applying Algebra Cognition Research to Develop and Validate Diagnostic Classroom Algebra Testlet_. <https://ies.ed.gov/use-work/awards/bridging-gap-applying-algebra-cognition-research-develop-and-validate-diagnostic-classroom-algebra>
 13. OpenAI. _Data Controls in the OpenAI Platform_. <https://platform.openai.com/docs/models/default-usage-policies-by-endpoint>; _Business Data Privacy_. <https://openai.com/business-data/> (inputs/outputs not used for training by default; abuse-monitoring logs retained up to 30 days; ZDR requires approval)
+14. NCES. _Number of operating public elementary and secondary schools and districts, student membership, teachers, and pupil/teacher ratio, 2023–24_. <https://nces.ed.gov/ccd/tables/202324_summary_2.asp> (49,404,386 students; 99,297 schools; 19,186 districts)
+15. UNESCO Institute for Statistics. _2026 Education Data Refresh_. <https://www.uis.unesco.org/en/news/2026-education-data-refresh> (global learning-proficiency context; not evidence of product demand or portability)
 
 Policy-background appendix (not part of the core reference list): Moon, T. (2026). _How Districts Can Fund High-Quality Tutoring Now That ESSER Money Is Gone_. The 74 — a secondhand policy summary; Tennessee's $500/student figure is for 4th-grade **literacy** tutoring, not math.
