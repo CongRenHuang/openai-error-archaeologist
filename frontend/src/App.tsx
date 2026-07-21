@@ -104,7 +104,13 @@ export default function App() {
     <main className="shell">
       <header className="masthead">
         <a className="wordmark" href="#top" aria-label="Error Archaeologist home">
-          <span className="wordmark-mark">EA</span>
+          <img
+            className="wordmark-mark"
+            src="/error-archaeologist-logo.png"
+            alt=""
+            width="40"
+            height="40"
+          />
           <span>Error Archaeologist</span>
         </a>
         <p className="track">OpenAI Build Week · Education</p>

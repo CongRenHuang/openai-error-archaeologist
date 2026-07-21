@@ -11,7 +11,7 @@
 ## Global Constraints
 
 - Use a flat circular excavation seal with horizontal geological strata revealing part of an algebraic `x`.
-- Use deep teal `#183238`, oxide `#af4d34`, and warm paper `#f4f0e6`.
+- Use sampled logo colors: deep teal `#0e3238`, oxide `#ba3b1f`, and warm paper `#f6f0e4`.
 - Keep the mark recognizable at 32 pixels.
 - Include no wordmark, gradients, mockup framing, shadow, or watermark.
 - Preserve the existing “Error Archaeologist” HTML wordmark and accessible home-link name.
@@ -40,7 +40,7 @@ Asset type: demo application logo and favicon source
 Primary request: Create an original flat circular excavation seal for “Error Archaeologist.” Horizontal geological strata reveal part of a bold algebraic x, combining mathematical evidence analysis with archaeology. The x must remain recognizable when the mark is reduced to 32 pixels.
 Style/medium: vector-friendly logo mark rendered as a crisp flat raster image
 Composition/framing: one centered square mark, circular outer silhouette, balanced negative space, generous padding
-Color palette: exact deep teal #183238, exact oxide #af4d34, and exact warm paper #f4f0e6 only
+Color palette: deep teal, oxide, and warm paper matching the existing interface palette
 Scene/backdrop: perfectly flat solid #00ff00 chroma-key background for removal
 Constraints: no text, no letters other than the algebraic x symbol, no gradients, no mockup, no 3D, no shadow, no texture, no watermark; background must be one uniform #00ff00 with no lighting variation; keep mark fully separated from background with crisp edges; never use #00ff00 inside mark
 ```
@@ -165,9 +165,9 @@ Replace `:root` variable block in `frontend/src/styles.css` with:
   font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
-  --brand-deep: #183238;
-  --brand-oxide: #af4d34;
-  --brand-paper: #f4f0e6;
+  --brand-deep: #0e3238;
+  --brand-oxide: #ba3b1f;
+  --brand-paper: #f6f0e4;
   --ink: #17272b;
   --deep: var(--brand-deep);
   --paper: var(--brand-paper);
@@ -214,7 +214,7 @@ Add this line after viewport meta tag in `frontend/index.html`:
 <link rel="icon" type="image/png" href="/favicon.png" />
 ```
 
-Keep existing theme color `#183238`, matching `--brand-deep`.
+Set theme color to `#0e3238`, matching `--brand-deep`.
 
 - [ ] **Step 4: Add logo to README**
 
@@ -291,4 +291,3 @@ git status --short
 ```
 
 Expected: scoped diff contains only approved branding work; unrelated pre-existing `pitch-video/` changes remain untouched.
-

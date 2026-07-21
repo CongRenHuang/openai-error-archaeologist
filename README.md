@@ -1,5 +1,7 @@
 # Error Archaeologist
 
+<img src="frontend/public/error-archaeologist-logo.png" alt="Error Archaeologist logo" width="120" />
+
 Error Archaeologist turns one handwritten algebra mistake into two evidence-linked hypotheses and a mathematically verified follow-up question. Student response changes hypothesis support; system can abstain. It never claims to read a student's mind.
 
 Built for OpenAI Build Week 2026, Education track.
