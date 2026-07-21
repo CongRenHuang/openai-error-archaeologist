@@ -2,37 +2,41 @@
 
 ## Project Structure & Module Organization
 
-This repository is currently a planning and research workspace for OpenAI Build Week 2026; it does not contain an application scaffold yet.
+This repository contains planning research plus a runnable Error Archaeologist demo.
 
-- `docs/proposals/` contains strategy and project proposals. Treat `00-strategy.md` as the main source of truth and `README-error-archaeologist.md` as the submission-oriented overview.
+- `backend/app/` contains FastAPI routes, model adapters, SQLite repository, and deterministic SymPy domain logic. Tests live in `backend/tests/`.
+- `frontend/src/` contains React UI and workflow types. Vite builds into `frontend/dist/`.
+- `backend/app/static/samples/` contains synthetic PNG fixtures; regenerate them with `backend/scripts/generate_samples.py`.
+- `docs/proposals/` contains strategy and product evidence. `docs/superpowers/` records approved design and implementation plan.
 - `docs/briefing/` contains briefing notes and rendered reference material.
-- `docs/res/` stores research grouped by source (`codex/`, `gemini/`, `grok/`, and `web/`). Preserve source attribution when updating these files.
-- `CLAUDE.md` records repository-specific context for coding agents.
 
 Keep new documents in the closest existing directory. Use descriptive, kebab-case filenames, optionally prefixed for ordered proposals, such as `05-new-concept.md`.
 
 ## Build, Test, and Development Commands
 
-No build system, package manager, development server, or automated test suite is configured. Useful repository checks are:
-
 ```sh
-rg --files docs                 # inventory tracked document paths
-git diff --check               # detect whitespace and conflict-marker errors
-git status --short             # review intended changes before committing
+uv sync --python 3.13                    # install Python dependencies
+npm --prefix frontend install            # install frontend dependencies
+MODEL_ADAPTER=fake uv run pytest          # run backend tests without secrets
+node --test frontend/src/workflow.test.ts # run workflow-state tests
+npm --prefix frontend run build           # type-check and build UI
+docker compose up --build                 # run full demo at localhost:8000
 ```
-
-When application code is added, document its install, run, lint, and test commands here and in `CLAUDE.md`.
 
 ## Coding Style & Naming Conventions
 
-Write concise Markdown with ATX headings (`#`, `##`), short paragraphs, and fenced code blocks with language tags. Match each file's existing language: strategy analysis is primarily Traditional Chinese, while product names and technical terms may remain English. Keep heading levels sequential and relative links valid. Do not silently replace corrected hackathon facts or remove `❌ 更正` markers without rechecking primary sources.
+Use Python 3.13, four-space indentation, type hints, Pydantic contracts, and focused modules. Python files/functions use `snake_case`; classes use `PascalCase`. React uses TypeScript, two-space indentation, `PascalCase` components, and `camelCase` functions. Keep API fields `snake_case` to match Pydantic. Never bypass `domain/verifier.py` for probe decisions.
 
 ## Testing Guidelines
 
-Validation is currently editorial. Before submitting changes, render affected Markdown, verify links and citations, compare factual claims against primary sources, and run `git diff --check`. For HTML or PDF changes, inspect rendered output visually. Future code should add colocated or dedicated tests and define framework-specific naming rules with the scaffold.
+Follow red-green-refactor for behavior changes. Name Python tests `test_*.py`; keep pure frontend workflow tests as `*.test.ts`. Use fake adapter in automated tests. Live GPT-5.6 calls require explicit approval and must never run in default test command. Before commit, run focused tests, then full commands above and `git diff --check`.
 
 ## Commit & Pull Request Guidelines
 
 Recent history uses short, imperative, sentence-case subjects, for example `Add reference search plan and validation results`. Keep each commit focused; add a body when explaining source changes or non-obvious decisions.
 
-Pull requests should summarize purpose, list affected documents, link related issues or primary sources, and call out corrected facts. Include screenshots for visual HTML/PDF changes. Never commit API keys, student data, or unpublished personal information.
+Pull requests should summarize purpose, verification output, affected routes, and privacy impact. Include screenshots for UI changes and failure/abstention behavior. Never commit `.env`, API keys, real student data, generated SQLite files, or unpublished personal information.
+
+## Security & Configuration
+
+Copy `.env.example` to ignored `.env`. Secrets belong only in local environment or Secret Manager. Demo accepts curated synthetic samples only. SQLite is disposable and not production storage. Preserve visible fixture/live source labels.

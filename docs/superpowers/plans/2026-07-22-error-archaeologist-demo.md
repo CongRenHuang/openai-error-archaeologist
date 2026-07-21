@@ -309,7 +309,7 @@ git commit -m "feat(ui): add diagnostic demo flow"
 **Interfaces:**
 - Produces: one local command, one Cloud Run image, judge testing instructions.
 
-- [ ] **Step 1: Add multi-stage container**
+- [x] **Step 1: Add multi-stage container**
 
 Node stage runs `npm ci` and `npm run build`. Python stage uses `python:3.13-slim`, copies uv binary from `ghcr.io/astral-sh/uv:0.11.15`, runs `uv sync --frozen --no-dev`, copies backend and frontend dist, then starts:
 
@@ -319,7 +319,7 @@ CMD ["sh", "-c", "uv run uvicorn backend.app.main:app --host 0.0.0.0 --port ${PO
 
 Compose exposes `8000`, mounts `demo-data:/data`, and sets defaults through `${NAME:-default}` interpolation so fake mode needs no `.env`. Live mode uses `docker compose --env-file .env up`; SQLite URL is `sqlite:////data/demo.db`.
 
-- [ ] **Step 2: Verify fake-mode container before any live call**
+- [x] **Step 2: Verify fake-mode container before any live call**
 
 Run: `MODEL_ADAPTER=fake docker compose up --build`
 
@@ -329,11 +329,11 @@ Expected: `GET http://localhost:8000/api/v1/samples` returns three samples; full
 
 Human creates `.env` locally with `OPENAI_API_KEY` and confirms API usage. Run one curated analysis only. Expected: structured diagnosis or explicit actionable failure; never expose key/output in command logs.
 
-- [ ] **Step 4: Update judge documentation**
+- [x] **Step 4: Update judge documentation**
 
 README must include product story, video-link insertion during H4, `docker compose up --build`, fake-test command, live-key requirement, three-endpoint architecture, synthetic-data limitation, SQLite reset behavior, Codex collaboration, dated commit history, and Devpost testing steps. AGENTS commands must match actual scaffold.
 
-- [ ] **Step 5: Run final local gate**
+- [x] **Step 5: Run final local gate**
 
 ```bash
 uv run pytest backend/tests -v
