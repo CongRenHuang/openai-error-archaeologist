@@ -112,9 +112,10 @@ class FakeModelAdapter:
 
 
 class OpenAIModelAdapter:
-    def __init__(self, api_key: str | None, model: str):
+    def __init__(self, api_key: str | None, model: str, reasoning_effort: str):
         self.api_key = api_key
         self.model = model
+        self.reasoning_effort = reasoning_effort
         self.source = model
 
     def analyze(self, sample: Sample) -> AnalysisResult:
@@ -137,6 +138,7 @@ class OpenAIModelAdapter:
                         ],
                     }
                 ],
+                reasoning={"effort": self.reasoning_effort},
                 text_format=AnalysisResult,
             )
         except Exception as error:

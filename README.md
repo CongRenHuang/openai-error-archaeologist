@@ -84,7 +84,7 @@ gcloud run deploy error-archaeologist \
   --source . \
   --allow-unauthenticated \
   --max-instances 1 \
-  --set-env-vars OPENAI_MODEL=gpt-5.6,MODEL_ADAPTER=openai,DATABASE_URL=sqlite:////tmp/demo.db \
+  --set-env-vars OPENAI_MODEL=gpt-5.6-luna,OPENAI_REASONING_EFFORT=medium,MODEL_ADAPTER=openai,DATABASE_URL=sqlite:////tmp/demo.db \
   --set-secrets OPENAI_API_KEY=openai-api-key:latest
 ```
 

@@ -38,6 +38,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         adapter = OpenAIModelAdapter(
             api_key=secret.get_secret_value() if secret else None,
             model=active_settings.openai_model,
+            reasoning_effort=active_settings.openai_reasoning_effort,
         )
     service = AnalysisService(adapter=adapter, repository=repository)
     app = FastAPI(title="Error Archaeologist", version="0.1.0")
