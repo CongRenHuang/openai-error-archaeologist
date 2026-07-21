@@ -66,4 +66,4 @@
 - [x] **Step 1:** Run `rg -n '(proves which|student.*decides|How we built it|we built|built in from day one)'` and expect no unsupported matches.
 - [x] **Step 2:** Run `git diff --check` and expect no output.
 - [x] **Step 3:** Inspect `git diff --stat`, headings, status labels, architecture flow, business sequence, and six-slide timing.
-- [ ] **Step 4:** Commit documentation fixes separately from baseline commit.
+- [x] **Step 4:** Commit documentation fixes separately from baseline commit.
