@@ -1,4 +1,4 @@
-import type { AnalysisStatus, UpdateStatus } from "./types";
+import type { AnalysisStatus, Candidate, UpdateStatus } from "./types";
 
 export type Phase =
   | "selection"
@@ -14,4 +14,10 @@ export function phaseForAnalysis(status: AnalysisStatus): Phase {
 
 export function phaseForUpdate(_status: UpdateStatus): Phase {
   return "updated";
+}
+
+export function responseForCandidate(
+  candidate: Pick<Candidate, "predicted_answer">,
+): string {
+  return candidate.predicted_answer;
 }

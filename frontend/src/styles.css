@@ -80,6 +80,19 @@ code { padding: .15em .35em; background: rgba(23,39,43,.07); font-family: "SFMon
 .candidate-heading b { color: var(--oxide); }
 .candidate h3 { margin: 28px 0 18px; font-family: "Iowan Old Style", Palatino, serif; font-size: 1.42rem; line-height: 1.15; }
 .candidate p { margin: 0; color: var(--graphite); font-size: .86rem; }
+.candidate-response {
+  margin-top: 18px;
+  padding: 8px 0;
+  color: var(--teal);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  font: inherit;
+  font-size: .78rem;
+  font-weight: 800;
+}
+.candidate-response:hover,
+.candidate-response:focus-visible { color: var(--oxide); }
 .probe-card { position: relative; margin-top: 24px; padding: clamp(24px, 4vw, 40px); color: var(--paper); background: var(--deep); }
 .verified-badge { position: absolute; right: 20px; top: 18px; color: #9ad0c6; font-family: "SFMono-Regular", monospace; font-size: .66rem; text-transform: uppercase; letter-spacing: .08em; }
 .verified-badge span { display: inline-grid; place-items: center; width: 20px; height: 20px; margin-right: 6px; color: var(--deep); background: #9ad0c6; border-radius: 50%; }
