@@ -1,205 +1,161 @@
-# Error Archaeologist Sample Demo Architecture
+# Error Archaeologist Hackathon Demo Design
 
-**Status:** Approved design, not yet implemented
+**Status:** Revised design, not yet implemented
 
 **Date:** 2026-07-22
 
-**Target:** One public, judge-ready demo deployable to Google Cloud Run
+**Target:** Runnable submission before 2026-07-22 08:00 GMT+8
 
-## Goal and Success Criteria
+## Deadline and Product Goal
 
-Build one reliable Grade 7–9 algebra workflow: user selects a curated handwritten sample or uploads a synthetic/de-identified image, reviews evidence-linked diagnostic hypotheses, answers a verified differentiating probe, then accepts, revises, or rejects the result.
+Official submission closes July 21, 2026 at 5:00 PM PDT, equal to July 22 at 08:00 GMT+8. At 03:46 GMT+8, about 4 hours 14 minutes remained. Phase 1 therefore optimizes for one coherent, working story rather than production architecture.
 
-Success requires:
+User selects curated handwritten algebra work. System shows evidence-linked candidate misconceptions, independently verifies a differentiating probe with SymPy, accepts one response, then updates candidate support or abstains. Demo proves diagnosis is a testable hypothesis, not an LLM verdict.
 
-- `docker compose up --build` starts the full local stack.
-- One container deploys React and FastAPI to Cloud Run.
-- Cloud SQL PostgreSQL persists analysis, probe, and review events.
-- Curated sample flow works without raw-image persistence.
-- Ambiguous input and unverifiable probes produce abstention, not forced diagnosis.
-- Fake-model tests run without secrets; live tests require explicit human opt-in.
+## Phase 1: Submission-Critical Demo
 
-## Scope
+### Required experience
 
-Included: curated samples, optional PNG/JPEG upload, one algebra taxonomy, multimodal parsing, deterministic SymPy checks, structured results, one follow-up probe, anonymous session, teacher review, and reviewed-result aggregate.
+1. Choose one of three curated samples: negative distribution error, first-term-only distribution error, or ambiguous handwriting.
+2. Request analysis from GPT-5.6 through OpenAI Responses API Structured Outputs.
+3. Display normalized steps, first invalid transition, two candidate hypotheses, evidence, and one follow-up probe.
+4. SymPy verifies supported algebra and confirms candidate predictions differ.
+5. Enter a probe response. System strengthens one candidate, weakens both, or abstains.
+6. Ambiguous input, invalid math, or non-discriminating probe returns an explicit abstention state.
 
-Excluded: accounts, real student data, grading, batch scanning, LMS integration, object storage, queues, Redis, billing, multi-subject support, and learning-effect claims.
+### Explicit cuts
 
-## Architecture Decision
+No upload, PII confirmation, user accounts, teacher review, aggregate, Cloud SQL, Alembic, idempotency keys, session deletion, separate readiness endpoint, queues, object storage, batch workflow, LMS, or real student data.
 
-Use a **single deployable modular monolith**. React + Vite compiles into static assets copied into the FastAPI image. FastAPI serves both those assets and `/api/v1/*`. One Cloud Run service connects to managed Cloud SQL PostgreSQL.
+## Minimal Architecture
+
+Use one deployable modular monolith. React + Vite compiles into static files served by FastAPI. One Docker image runs locally and on Cloud Run.
 
 ```text
 Browser: React + Vite
-  |-- curated sample picker / optional upload
-  |-- analysis evidence and abstention states
-  |-- differentiating probe
-  `-- teacher review
+  |-- curated sample picker
+  |-- evidence and candidate cards
+  |-- verified probe response
+  `-- abstention/error states
              |
-             | HTTPS /api/v1/*
+             | three HTTPS endpoints
              v
-Cloud Run: FastAPI + compiled React
-  |-- API and orchestration
+Cloud Run / local Docker: FastAPI
   |-- OpenAI Responses API adapter
   |-- Pydantic structured-output contract
-  |-- algebra taxonomy matcher
-  |-- SymPy transition and probe verifier
-  `-- evidence updater
-             |
-             v
-Cloud SQL PostgreSQL
-  |-- demo_sessions
-  |-- analyses
-  |-- probe_responses
-  `-- reviews
+  |-- versioned misconception taxonomy
+  |-- SymPy verifier and response matcher
+  |-- curated fixtures
+  `-- disposable SQLite state
 ```
 
-This choice minimizes deployment and CORS work while preserving internal module boundaries. Separate frontend/backend services become worthwhile only when release cadence, ownership, or scaling differs.
+SQLite uses SQLAlchemy `create_all`; no migrations. It supports same-process demo continuity only. Cloud Run filesystem is ephemeral, so restarts may reset analyses. Configure maximum one instance for demo and make reset visible and harmless. No durability claim appears in README or video.
 
-## Components and Boundaries
+### Why keep SQLite
+
+It preserves analysis-to-probe flow without Cloud SQL provisioning. Repository boundary remains SQLAlchemy-based, allowing PostgreSQL replacement later. If SQLite causes deployment trouble, replace stored state with a signed analysis token or keep complete flow inside one request; do not add Cloud SQL before submission.
+
+## Components
 
 ### Frontend
 
-React presents a single guided flow: select input, analyze, inspect evidence, answer probe, review suggestion, view aggregate. It never receives an OpenAI key or calls OpenAI directly. It displays explicit progress, abstention, retry, and API-unavailable states.
+Single page with four states: sample selection, analyzing, diagnosis/probe, and evidence update. No router, authentication, dashboard, aggregate, or settings. Frontend never receives API key.
 
-### API and Orchestrator
+### FastAPI
 
-FastAPI validates input, owns anonymous sessions, calls domain services, persists events, and maps failures to stable error codes. Analysis remains synchronous with a 45-second timeout; Cloud Run background work is not required.
+FastAPI validates sample IDs, orchestrates model and SymPy calls, stores disposable analysis state, serves compiled frontend, and returns stable error codes. Analysis remains synchronous with a 45-second timeout.
 
-### Model Adapter
+### Model adapter
 
-The OpenAI adapter sends images through the Responses API and parses output into Pydantic models. `OPENAI_MODEL` controls model selection; initial configuration is `gpt-5.6`. Structured Outputs enforce shape, not mathematical truth. Safety refusal and incomplete/invalid results receive explicit handling.
+Responses API receives repository-owned sample image and returns a strict Pydantic structure. `OPENAI_MODEL` defaults to `gpt-5.6`. Structured Outputs enforce schema, not truth. Refusal, incomplete response, or contract failure gets one retry, then controlled failure.
 
-### Deterministic Domain Layer
+### Deterministic verifier
 
-SymPy checks supported algebraic transitions, identifies the first invalid step, normalizes probe responses, and verifies candidate predictions differ. Taxonomy rules live in versioned YAML. Model proposes parses and hypotheses; deterministic code verifies supported mathematics.
+SymPy validates supported expressions, identifies first invalid transition, verifies predicted probe answers are distinct, and normalizes user response. Failed probe validation permits one regenerated proposal; second failure abstains.
 
-### Persistence
-
-PostgreSQL stores structured events, not uploaded images. Curated samples and taxonomy stay in Git. JSONB retains versioned model results without prematurely normalizing an evolving contract.
-
-## Request Flow
-
-1. User chooses `sample_id` or image, never both.
-2. Upload path requires `pii_confirmed=true`; backend validates MIME and size.
-3. API creates pending analysis under anonymous signed session.
-4. Model adapter returns normalized steps, uncertainty, candidates, evidence, and probe proposal.
-5. SymPy validates steps and probe discriminability.
-6. Failed probe validation permits one regeneration. Second failure returns abstention.
-7. API persists structured result and usage metadata; in-memory image bytes are released.
-8. Student response is normalized and matched against verified predictions.
-9. Teacher accepts, revises, or rejects. Only accepted/revised events enter aggregate.
-
-## API Contract
+## Three API Endpoints
 
 ```text
-GET    /healthz
-GET    /readyz
-GET    /api/v1/samples
-POST   /api/v1/analyses
-GET    /api/v1/analyses/{id}
-POST   /api/v1/analyses/{id}/probe-response
-POST   /api/v1/analyses/{id}/review
-GET    /api/v1/aggregate
-DELETE /api/v1/session
+GET  /api/v1/samples
+POST /api/v1/analyses
+POST /api/v1/probe-response
 ```
 
-`POST /analyses` accepts multipart `sample_id?`, `image?`, and `pii_confirmed?`. Client supplies `Idempotency-Key`; database enforces session-scoped uniqueness. Domain abstention returns a successful analysis resource, not an HTTP error.
+`POST /analyses` accepts `{ "sample_id": "negative-distribution" }` and returns analysis ID plus structured diagnosis. `POST /probe-response` accepts analysis ID and response text, then returns evidence update. Unknown/expired analysis returns reset guidance.
 
-## Data Model
+Domain abstention is HTTP `200` with `status="abstained"`. Invalid requests return `400`; unavailable model returns `503` with correlation ID. Logs never include image bytes, prompts containing student work, secret values, or full model output.
 
-- `demo_sessions`: UUID, signed-cookie identifier, creation and expiry times.
-- `analyses`: session, idempotency key, source type, sample ID, status, result JSONB, contract version, model, token usage, latency, error code, timestamps.
-- `probe_responses`: analysis, raw response, normalized expression, matched candidate, evidence update JSONB, timestamp.
-- `reviews`: analysis, `accepted | revised | rejected`, selected candidate, timestamp. Free-text notes stay out of demo to reduce PII risk.
+## Secrets and Human Stops
 
-No student name, email, school, account, or raw image column exists.
-
-## Secrets and Human Gates
-
-| Value | Classification | Handling |
-| --- | --- | --- |
-| `OPENAI_API_KEY` | Secret | Local ignored `.env`; production Secret Manager |
-| `DB_PASSWORD` | Secret | Local Compose value; production Secret Manager |
-| `SESSION_SECRET` | Secret | Generated once; production Secret Manager |
-| `OPENAI_MODEL` | Configuration | Environment variable |
-| GCP project, region, Cloud SQL instance | Configuration | Environment/deploy arguments |
-
-Secrets never enter React build variables, Docker layers, source control, logs, or responses. Cloud Run uses its service account; no service-account key file is uploaded.
-
-Human-stop sequence:
+Only `OPENAI_API_KEY` is required. Store it in ignored local `.env`; for Cloud Run, add it through Secret Manager. `OPENAI_MODEL` and deployment identifiers are non-secret configuration. Never place key in React variables, Docker layers, Git, logs, or shell history.
 
 ```text
-Automated implementation
-  -> H1: provide OPENAI_API_KEY
-  -> local live-API smoke test
-  -> automated tests and image build
-  -> H2: confirm GCP project, billing, and region
-  -> provision Cloud SQL, service identity, and Secret Manager
-  -> H3: create/approve production secret values
-  -> deploy
-  -> H4: review public workflow and approve submission
+H0: Human confirms Devpost registration/draft, YouTube upload access,
+    repository visibility, and required /feedback Session ID path.
+H1: Human supplies OPENAI_API_KEY.
+Automated core implementation and fake-model verification.
+H2: Human approves live OpenAI smoke test and resulting API usage.
+H3: Human confirms GCP project/billing or chooses local-only fallback.
+Automated Docker/Cloud Run deployment attempt, capped at 20 minutes.
+H4: Human records video, completes Devpost fields, and submits by 07:15.
 ```
 
-Runtime human gates: upload confirmation blocks possible PII; ambiguity blocks diagnosis; teacher review blocks aggregation. API or model-access failure stops with an actionable message. No silent fallback model.
+API/model failure has no silent fallback. Fake adapter is visibly labeled and used only for tests or optional UI-development mode, never represented as live GPT-5.6 output.
 
-## Local and Cloud Deployment
+## Hard Timeline and Fallback
 
-Local `docker-compose.yml` runs `app` and `postgres`. Multi-stage Docker build compiles Vite, installs Python dependencies, copies built assets, then starts Uvicorn on Cloud Run's `PORT`. Local startup may apply idempotent Alembic migrations; production deployment runs migrations once as an explicit pre-deploy step, avoiding concurrent startup migration races.
+| GMT+8 checkpoint | Required outcome |
+| --- | --- |
+| 03:50 | H0/H1 complete; Devpost draft exists |
+| 03:50–05:30 | End-to-end curated flow implemented |
+| 05:30–06:00 | Tests, copy, abstention case, Docker verification |
+| 06:00–06:30 | Cloud Run attempt; abandon after 20 blocked minutes |
+| 06:30–07:15 | Record/upload sub-3-minute video; finish README and Devpost |
+| 07:15 | Submit; retain 45-minute deadline buffer |
 
-Production uses Artifact Registry, one Cloud Run service, one Cloud SQL PostgreSQL instance, and Secret Manager. Service identity receives only Cloud SQL Client and secret-access permissions needed by this app. Initial public demo permits unauthenticated Cloud Run invocation but owns no privileged API routes.
+Fallback order:
 
-Proposed repository layout:
+1. Public Cloud Run URL with SQLite.
+2. Local `docker compose up --build`, screen-recorded working demo, repository instructions.
+3. Fake adapter only for automated tests; not submission demo.
 
-```text
-frontend/src/
-backend/app/api/
-backend/app/domain/
-backend/app/integrations/openai/
-backend/app/persistence/
-backend/app/fixtures/samples/
-backend/app/taxonomy/algebra-v1.yaml
-backend/tests/
-e2e/
-Dockerfile
-docker-compose.yml
-```
+Infrastructure never consumes recording/submission buffer.
 
-## Failure and Privacy Behavior
+## Essential Verification
 
-- Invalid MIME or request: `400`; oversize upload: `413`.
-- Database unavailable: `503`; never report fake success.
-- OpenAI rate limit, timeout, or `5xx`: one jittered retry, then `503` with correlation ID.
-- Invalid structured result: one retry, then controlled failure.
-- Unclear handwriting, unsupported algebra, or failed probe verification: stored abstention.
-- Logs contain IDs, stage, duration, status, and token usage; never image bytes, student content, keys, cookies, or database URLs.
-- Process image in memory only. Add a regression test proving persistence adapters never receive image bytes.
+- `pytest`: SymPy equivalence, distinct predictions, response matching, abstention, and three endpoint contracts with fake adapter.
+- `npm run build`: frontend production build.
+- `docker compose up --build`: complete curated workflow.
+- One opt-in live GPT-5.6 smoke test after H2.
+- Manual demo rehearsal: normal case, competing-hypothesis response, and abstention.
+- Secret scan and `git diff --check` before public push.
 
-## Verification Plan
+No Playwright, coverage target, broad frontend unit suite, load test, or managed-database test blocks Phase 1.
 
-- **Backend unit tests:** SymPy equivalence, first-invalid-transition, taxonomy matching, response normalization, evidence updates, abstention rules.
-- **Backend API tests:** Pydantic contracts, idempotency, retry limits, error mapping, upload limits, no-image persistence, review-before-aggregate.
-- **Frontend tests:** curated selection, upload confirmation, progress, abstention, probe, review, reset.
-- **End-to-end:** Playwright completes curated flow against Docker stack using fake OpenAI adapter.
-- **Live smoke test:** opt-in only with `RUN_OPENAI_INTEGRATION=1` and API key.
-- **Deployment check:** `/readyz`, curated workflow, one abstention sample, review persistence, and secret/log inspection.
+## Submission Deliverables
 
-## Growth Triggers
+- Working public or local-Docker demo matching video.
+- Public/shareable repository with install and test commands.
+- English README describing product, constraints, and Codex collaboration.
+- Public YouTube demonstration under three minutes with audio.
+- Devpost category, description, testing instructions, repository URL, and `/feedback` Session ID.
+- Dated commits showing work occurred during submission period.
 
-Revisit architecture when evidence warrants it:
+## Phase 2: Expansion After Submission-Critical Demo
 
-- Add job queue when analysis must survive disconnects or batch intake begins.
-- Split frontend when independent release/scaling needs appear.
-- Add object storage only with explicit retention/deletion policy.
-- Normalize JSONB candidates when cross-analysis querying becomes stable and frequent.
-- Add authentication and tenant isolation before any real educator pilot.
-- Add private networking, stronger audit controls, and approved data terms before real student data.
+Only start after Phase 1 code, Docker flow, video path, and Devpost draft are secure:
+
+1. Curated plus controlled image upload and PII confirmation.
+2. Teacher accept/revise/reject workflow.
+3. Reviewed-result aggregate.
+4. Cloud SQL PostgreSQL and Alembic migrations.
+5. Idempotency, authenticated tenants, durable audit events.
+6. Broader test pyramid, observability, retention controls, and batch workflow.
 
 ## References
 
+- [OpenAI Build Week official rules](https://openai.devpost.com/rules)
 - [OpenAI Images and vision](https://developers.openai.com/api/docs/guides/images-vision)
 - [OpenAI Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs)
-- [OpenAI data controls](https://developers.openai.com/api/docs/guides/your-data)
 - [Google Cloud Run container deployment](https://docs.cloud.google.com/run/docs/deploying)
-- [Connect Cloud Run to Cloud SQL for PostgreSQL](https://docs.cloud.google.com/sql/docs/postgres/connect-run)
 - [Configure Cloud Run secrets](https://docs.cloud.google.com/run/docs/configuring/services/secrets)
