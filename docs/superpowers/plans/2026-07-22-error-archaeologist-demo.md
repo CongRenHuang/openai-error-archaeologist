@@ -125,7 +125,7 @@ UV_CACHE_DIR=/private/tmp/open-ai-build-week-uv-cache uv run python -c "import f
 
 Expected: all commands exit `0`; `uv.lock` and `frontend/package-lock.json` exist.
 
-- [ ] **Step 5: Commit scaffold only**
+- [x] **Step 5: Commit scaffold only**
 
 ```bash
 git add .gitignore .env.example pyproject.toml uv.lock frontend backend/app
@@ -142,7 +142,7 @@ git commit -m "build: scaffold demo application"
 **Interfaces:**
 - Produces: `AnalysisResult`, `Probe`, `Candidate`, `EvidenceUpdate`, `verify_probe(result)`, and `match_response(result, response)`.
 
-- [ ] **Step 1: Write failing verifier tests**
+- [x] **Step 1: Write failing verifier tests**
 
 ```python
 def test_probe_predictions_must_differ(analysis_result):
@@ -158,13 +158,13 @@ def test_unmatched_response_abstains(analysis_result):
     assert match_response(analysis_result, "banana").status == "abstained"
 ```
 
-- [ ] **Step 2: Run tests and confirm missing-module failure**
+- [x] **Step 2: Run tests and confirm missing-module failure**
 
 Run: `uv run pytest backend/tests/test_verifier.py -v`
 
 Expected: FAIL because `backend.app.domain.verifier` does not exist.
 
-- [ ] **Step 3: Implement typed contracts and SymPy verification**
+- [x] **Step 3: Implement typed contracts and SymPy verification**
 
 Use Pydantic literals for `status`; candidates contain `id`, `label`, `evidence_step`, and `predicted_answer`. `verify_probe` must sympify correct/predicted answers and require every prediction to differ from correct and each other. `match_response` uses symbolic equivalence and returns abstention for parse failure or no match.
 
@@ -179,7 +179,7 @@ def equivalent(left: str, right: str) -> bool:
         return False
 ```
 
-- [ ] **Step 4: Generate three repository-owned PNG fixtures**
+- [x] **Step 4: Generate three repository-owned PNG fixtures**
 
 `generate_samples.py` uses Pillow with a bundled/system handwritten-style font when present and a default font fallback. It writes fixed 1200x800 white PNGs containing only algebra work. `fixtures.py` returns stable IDs `negative-distribution`, `first-term-only`, and `ambiguous-input` with public `/samples/<id>.png` URLs.
 
@@ -187,7 +187,7 @@ Run: `uv run python backend/scripts/generate_samples.py`
 
 Expected: three PNG files exist and Pillow can reopen each.
 
-- [ ] **Step 5: Run focused tests and commit**
+- [x] **Step 5: Run focused tests and commit**
 
 Run: `uv run pytest backend/tests/test_verifier.py backend/tests/test_fixtures.py -v`
 
