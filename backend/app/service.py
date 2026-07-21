@@ -33,6 +33,7 @@ class AnalysisService:
                 return AnalysisEnvelope(
                     id=analysis_id,
                     sample_id=sample.id,
+                    source=self.adapter.source,
                     result=result,
                 )
 
@@ -43,7 +44,12 @@ class AnalysisService:
             abstain_reason="Could not verify a discriminating probe.",
         )
         analysis_id = self.repository.save(sample.id, result)
-        return AnalysisEnvelope(id=analysis_id, sample_id=sample.id, result=result)
+        return AnalysisEnvelope(
+            id=analysis_id,
+            sample_id=sample.id,
+            source=self.adapter.source,
+            result=result,
+        )
 
     def respond(self, analysis_id: str, response: str) -> EvidenceUpdate:
         result = self.repository.get(analysis_id)

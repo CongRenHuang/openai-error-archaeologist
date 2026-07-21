@@ -43,6 +43,7 @@ export interface AnalysisResult {
 export interface AnalysisEnvelope {
   id: string;
   sample_id: string;
+  source: string;
   result: AnalysisResult;
 }
 

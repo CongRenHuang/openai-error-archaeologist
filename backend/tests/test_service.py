@@ -2,6 +2,8 @@ from copy import deepcopy
 
 
 class AlwaysInvalidAdapter:
+    source = "fixture"
+
     def __init__(self, result):
         self.result = result
         self.calls = 0

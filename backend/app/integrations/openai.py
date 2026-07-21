@@ -29,6 +29,8 @@ class ModelAdapterError(RuntimeError):
 
 
 class ModelAdapter(Protocol):
+    source: str
+
     def analyze(self, sample: Sample) -> AnalysisResult: ...
 
 
@@ -95,6 +97,8 @@ def _first_term_only() -> AnalysisResult:
 
 
 class FakeModelAdapter:
+    source = "fixture"
+
     def analyze(self, sample: Sample) -> AnalysisResult:
         if sample.id == "ambiguous-input":
             return AnalysisResult(
@@ -111,6 +115,7 @@ class OpenAIModelAdapter:
     def __init__(self, api_key: str | None, model: str):
         self.api_key = api_key
         self.model = model
+        self.source = model
 
     def analyze(self, sample: Sample) -> AnalysisResult:
         if not self.api_key:

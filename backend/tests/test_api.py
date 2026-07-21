@@ -27,6 +27,7 @@ def test_complete_demo_flow(tmp_path):
     )
     assert analysis_response.status_code == 200
     analysis = analysis_response.json()
+    assert analysis["source"] == "fixture"
     assert analysis["result"]["status"] == "diagnosed"
     assert analysis["result"]["probe"]["question"] == "Expand -4(b - 3)"
 

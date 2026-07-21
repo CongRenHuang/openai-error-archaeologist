@@ -46,4 +46,5 @@ class EvidenceUpdate(BaseModel):
 class AnalysisEnvelope(BaseModel):
     id: str
     sample_id: str
+    source: str
     result: AnalysisResult

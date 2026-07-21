@@ -185,6 +185,11 @@ export default function App() {
 
           {result?.status === "diagnosed" && probe && (
             <>
+              <div className={`model-source ${analysis?.source === "fixture" ? "fixture" : "live"}`}>
+                {analysis?.source === "fixture"
+                  ? "Fixture mode — deterministic test output"
+                  : `Live analysis · ${analysis?.source}`}
+              </div>
               <div className="observation">
                 <p className="micro-label">Observed transition</p>
                 <h2>{result.observed_error}</h2>

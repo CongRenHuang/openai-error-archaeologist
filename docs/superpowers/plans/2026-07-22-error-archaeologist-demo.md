@@ -293,7 +293,7 @@ Run: `npm --prefix frontend run build`
 
 Expected: TypeScript exits `0`; `frontend/dist/index.html` exists. Browser automation was unavailable in this environment, so human visual inspection remains part of H4 rehearsal.
 
-- [ ] **Step 5: Commit frontend**
+- [x] **Step 5: Commit frontend**
 
 ```bash
 git add frontend
