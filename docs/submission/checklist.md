@@ -6,9 +6,10 @@ Deadline: **July 22, 2026, 08:00 GMT+8**. Create and save the Devpost draft befo
 
 - [ ] Join the OpenAI Build Week challenge while signed into the submitting Devpost account.
 - [ ] Create a project draft named **Error Archaeologist**.
-- [ ] Select the **Education** track and confirm team members.
+- [ ] Select the **Education** category. If submitting with others, add every member and confirm each invitation is accepted; otherwise confirm solo submission.
 - [ ] Confirm YouTube Studio can upload a **public** video with audio.
 - [ ] Run `/feedback` in the Codex thread where most core functionality was built; save its Session ID in the draft.
+- [ ] Confirm submission uses the public repository. If any judged code remains private, share that repository with Devpost and OpenAI.
 - [x] Add an MIT repository license.
 - [ ] Save the draft once. Keep the browser tab open while recording.
 
@@ -21,6 +22,8 @@ Deadline: **July 22, 2026, 08:00 GMT+8**. Create and save the Devpost draft befo
 - [x] SymPy independently checks whether probe predictions are mathematically distinct.
 - [x] Automated checks: 15 backend tests, 4 frontend workflow tests, and production frontend build.
 - [x] Synthetic samples only; no student upload or PII path.
+- [x] README includes local setup, judge testing path, architecture, and distinct Codex/GPT-5.6 roles.
+- [x] Submission is a hosted web demo, not a plugin or installable developer tool; plugin installation instructions do not apply.
 
 ## Copy-Ready Devpost Fields
 
@@ -52,18 +55,20 @@ Current demo uses three synthetic samples and disposable SQLite state. It demons
 
 ## Video Handoff
 
-- [ ] Keep total runtime below 3:00; target 2:40–2:55.
+- [ ] Keep total runtime below 3:00; target 2:40–2:55. Cut loading, typing, silence, or use understandable 1.1×–1.25× playback if needed.
 - [ ] Show live URL, synthetic-data label, model source, two hypotheses, verified probe, and changed evidence.
 - [ ] Show abstention or state it clearly if live timing prevents a second model call.
-- [ ] Say both **Codex** and **GPT-5.6** in audio; explain their different roles.
+- [ ] Voiceover says what was built and explains distinct **Codex** and **GPT-5.6** roles.
 - [ ] Avoid claims of mind-reading, scientific validation, classroom efficacy, or proven demand.
-- [ ] Upload as **Public**, copy YouTube URL into Devpost, then test it signed out.
+- [ ] Upload as **Public**, copy the correct YouTube URL into Devpost, then test video and audio signed out.
 
 ## Final Submit Gate
 
 - [ ] Add public YouTube URL, repository URL, live demo URL, screenshots, and `/feedback` Session ID.
 - [ ] Confirm English project text and English narration or subtitles.
 - [ ] Confirm repository visibility; MIT license is present.
+- [ ] Read and edit all AI-assisted submission copy in your own voice; verify every claim against working demo.
 - [ ] Open live demo and repository in signed-out windows.
-- [ ] Submit before deadline; capture confirmation page and submission timestamp.
+- [ ] Select **Education**, verify team acceptance or solo status, and submit before deadline.
+- [ ] Confirm project is **submitted**, not saved as a draft; capture confirmation page and submission timestamp.
 - [ ] Keep Cloud Run and repository accessible through judging; judging ends August 5 5:00 PM Pacific / August 6 08:00 GMT+8.
