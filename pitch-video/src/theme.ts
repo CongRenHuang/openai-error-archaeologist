@@ -25,14 +25,15 @@ export const FONT = {
   mono: '"SF Mono", "JetBrains Mono", ui-monospace, monospace',
 } as const;
 
-// Scene timing in frames @30fps. Sums to 5250 = 2:55.
+// Scene timing in frames @30fps. Sums to 5340 = 2:58 (< 3:00 submission cap).
 export const SCENES = {
-  s1: { from: 0, dur: 750 }, // 0:00 Same Answer, Different Reason
-  s2: { from: 750, dur: 600 }, // 0:25 Diagnosis Gap
-  s3: { from: 1350, dur: 1500 }, // 0:45 Evidence Loop (WOW)
-  s4: { from: 2850, dur: 1050 }, // 1:35 Failure Is Product Behavior
-  s5: { from: 3900, dur: 750 }, // 2:10 Feasible Wedge & Business
-  s6: { from: 4650, dur: 600 }, // 2:35 Why This Team / Close
+  s1: { from: 0, dur: 660 }, // 0:00 Same Answer, Different Reason
+  s2: { from: 660, dur: 540 }, // 0:22 Diagnosis Gap
+  s3: { from: 1200, dur: 1380 }, // 0:40 Evidence Loop (WOW)
+  s4: { from: 2580, dur: 900 }, // 1:26 Failure Is Product Behavior
+  s5: { from: 3480, dur: 600 }, // 1:56 Feasible Wedge & Business
+  s6: { from: 4080, dur: 720 }, // 2:16 Built with Codex + GPT-5.6 (required narration)
+  s7: { from: 4800, dur: 540 }, // 2:40 Why This Team / Close
 } as const;
 
-export const TOTAL_FRAMES = 5250;
+export const TOTAL_FRAMES = 5340;

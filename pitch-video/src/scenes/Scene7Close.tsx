@@ -12,7 +12,7 @@ const ledger = [
 
 // 2:35–2:55 — Why this team / close. Rigor + CTA.
 // liveUrl is a swappable prop: placeholder until deployment is tested.
-export const Scene6: React.FC<{ liveUrl?: string }> = ({ liveUrl = "deploy pending — URL after tested" }) => {
+export const Scene7Close: React.FC<{ liveUrl?: string }> = ({ liveUrl = "deploy pending — URL after tested" }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   return (

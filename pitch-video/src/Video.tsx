@@ -6,9 +6,10 @@ import { Scene2 } from "./scenes/Scene2";
 import { Scene3 } from "./scenes/Scene3";
 import { Scene4 } from "./scenes/Scene4";
 import { Scene5 } from "./scenes/Scene5";
-import { Scene6 } from "./scenes/Scene6";
+import { Scene6Codex } from "./scenes/Scene6Codex";
+import { Scene7Close } from "./scenes/Scene7Close";
 
-// Full 2:55 pitch. Each Sequence resets useCurrentFrame to 0 at its start,
+// Full 2:58 pitch. Each Sequence resets useCurrentFrame to 0 at its start,
 // so every scene animates on its own local timeline.
 export const ErrorArchaeologistVideo: React.FC = () => (
   <AbsoluteFill style={{ background: COLORS.bg }}>
@@ -28,7 +29,10 @@ export const ErrorArchaeologistVideo: React.FC = () => (
       <Scene5 />
     </Sequence>
     <Sequence from={SCENES.s6.from} durationInFrames={SCENES.s6.dur}>
-      <Scene6 />
+      <Scene6Codex />
+    </Sequence>
+    <Sequence from={SCENES.s7.from} durationInFrames={SCENES.s7.dur}>
+      <Scene7Close />
     </Sequence>
   </AbsoluteFill>
 );
