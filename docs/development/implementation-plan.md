@@ -1,5 +1,7 @@
 # Error Archaeologist Demo Implementation Plan
 
+> **Historical execution plan:** This document preserves the implementation plan as captured during execution. Commands, model defaults, deployment targets, and checkbox states below reflect that capture time and are not current-status claims. See the [README](../../README.md) for the final active model configuration, deployment, setup, and verified product status.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Ship one curated-sample algebra diagnosis demo with GPT-5.6 structured vision output, independent SymPy probe verification, abstention, and a Docker/Cloud Run path.

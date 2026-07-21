@@ -1,14 +1,18 @@
 # Submission Repository Design
 
-**Date:** 2026-07-22  
-**Status:** Approved for planning  
+> **Historical implementation record:** This design was implemented during submission polish. The [README](../../README.md) is the current source for product status, model configuration, setup, deployment, and judge flow.
+
+**Date:** 2026-07-22
+
+**Status:** Implemented
+
 **Goal:** Make the public repository immediately understandable to judges while preserving credible research evidence and Codex development trace.
 
 ## Decision Summary
 
 Current live demo already proves the core product idea: GPT-5.6 Luna produces evidence-linked hypotheses, SymPy verifies a differentiating probe, student response changes hypothesis support, and ambiguous input can abstain. No new backend, upload, authentication, teacher dashboard, aggregate, or managed database work belongs before submission.
 
-One small interaction improvement remains: each hypothesis card gets a **Use this response** button. It fills the probe input with that hypothesis's predicted answer without submitting automatically. Judge still clicks **Update evidence**, making the evidence change explicit while removing algebra-typing friction.
+The implemented interaction improvement added a **Use this response** button to each hypothesis card. It fills the probe input with that hypothesis's predicted answer without submitting automatically. The judge then clicks **Update evidence**, making the evidence change explicit while removing algebra-typing friction.
 
 ## Public Repository Structure
 

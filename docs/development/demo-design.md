@@ -1,6 +1,8 @@
 # Error Archaeologist Hackathon Demo Design
 
-**Status:** Revised design, not yet implemented
+> **Historical design record:** This document captures the submission-critical design before implementation. The constrained demo described here was implemented and deployed; see the [README](../../README.md) for current product status, model configuration, setup, and deployment details.
+
+**Status:** Implemented; retained as a historical design record
 
 **Date:** 2026-07-22
 

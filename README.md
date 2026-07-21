@@ -2,9 +2,9 @@
 
 Error Archaeologist turns one handwritten algebra mistake into two evidence-linked hypotheses and a mathematically verified follow-up question. Student response changes hypothesis support; ambiguous evidence can make the system abstain. It never claims to read a student's mind.
 
-**OpenAI Build Week 2026 · Education**
-**Status:** built, publicly deployed, and technically verified on curated synthetic samples.
-**Live demo:** <https://error-archaeologist-hs2orfr2la-de.a.run.app>
+- **Track:** OpenAI Build Week 2026 · Education
+- **Status:** built, publicly deployed, and technically verified on curated synthetic samples.
+- **Live demo:** <https://error-archaeologist-hs2orfr2la-de.a.run.app>
 
 ## Judge It in 60 Seconds
 

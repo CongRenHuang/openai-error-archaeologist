@@ -61,8 +61,8 @@ This isn't a retreat — it's a more scientifically honest and more trustworthy 
 | Generation | Existing US solution | Limitation |
 | --- | --- | --- |
 | Human labor | High-dosage tutoring (1-on-1 to 1-on-2, diagnosis happens in the tutor's head) | $1,200-2,000/student/year; even effective programs reach only about 1-2% of eligible students [3][4] |
-| Rule/item-bank based | Diagnostic assessments: DAAS (10-12 multiple-choice testlets) [6]; commercial adaptive assessment (i-Ready, NWEA MAP) | DAAS-type tools rely on pre-written items, misconception distractors, and repeated-pattern responses; some commercial adaptive-assessment products mainly report skill/domain-level results (item design and output details for named products **have not been individually verified against official technical documentation**); comparative handling and cost for open-ended handwriting have not been measured |
-| Traditional ML | Cognitive diagnosis models (CDM/DINA) [7], ITS (Cognitive Tutor / ASSISTments) | Depend on a pre-designed Q-matrix and closed item formats; ITS only diagnoses within its own system — it never sees a student's everyday paper homework |
+| Rule/item-bank based | Diagnostic testlets such as DAAS [6]; commercial adaptive-assessment category | DAAS uses pre-written multiple-choice testlets. This evidence base does not establish commercial products' item design, output granularity, handling of open-ended handwriting, or comparative cost |
+| Traditional ML | Cognitive diagnosis models (CDM/DINA) [7]; intelligent-tutoring-system category | CDM/DINA methods can depend on a pre-designed Q-matrix and closed item formats. This evidence base does not establish how current commercial systems handle everyday paper homework |
 
 **What LLMs add**:
 
@@ -71,15 +71,15 @@ This isn't a retreat — it's a more scientifically honest and more trustworthy 
 3. **Evidence localization** — anchoring candidate root causes to "the exact step the student wrote," which requires semantic understanding of the derivation process.
 4. **On-the-fly differentiating-probe generation** — generate a question whose predicted answers differ for the candidate pair in an instance. Whether this outperforms a pre-authored item-bank workflow remains an evaluation hypothesis.
 
-**Market positioning: not another grading tool** (extension of Principle 04)
+**Market-positioning hypotheses: not another grading tool** (extension of Principle 04)
 
-| Category | Representative examples (type) | Optimizes for | How we differ |
-| --- | --- | --- | --- |
-| Assessment/grading-oriented | Handwritten-math grading and partial-credit tools (IntelGrader, Ed.ai, GradingPal, etc.) | Administrative efficiency: scores, error tags, worksheets | Current demo does not assign grades; target workflow evaluates whether an evidence-linked hypothesis + differentiating probe improves teaching decisions |
-| Student-facing solve-it apps | Photo-to-solution apps | Steps and answers | Current demo uses curated synthetic artifacts and supports teacher-facing hypothesis testing, not answer copying |
-| Diagnosis/tutoring platforms | Eedi, Glimmer, etc. | Misconceptions + intervention, some with RCTs/knowledge graphs | Target differentiation is **everyday paper-based, open-ended handwritten derivation** + **a differentiating probe with verified predictions**; the current demo uses curated samples and has no RCT-validated efficacy |
+| Anonymous category | Typical category framing | Current product boundary |
+| --- | --- | --- |
+| Assessment/grading-oriented tools | Scoring, error-tagging, or worksheet workflows | Current demo does not assign grades; the target workflow tests whether an evidence-linked hypothesis and differentiating probe improve teaching decisions |
+| Student-facing solve-it tools | Steps-and-answers workflows | Current demo uses curated synthetic artifacts and supports teacher-facing hypothesis testing, not answer copying |
+| Diagnosis/tutoring tools | Misconception and intervention workflows | Target differentiation is open-ended handwritten derivation plus a differentiating probe with verified predictions; the current demo uses curated samples and has no validated efficacy |
 
-Honesty: Eedi and similar products have a longer validation track record. Named products in the table are **category examples only** — capability descriptions are **category-level generalizations, and individual product capabilities have not been individually verified against official technical documentation**. If public copy keeps named comparisons, official documentation must be added first; otherwise switch to anonymous category language. The current demo does not establish a benchmark or human-review loop; copy will **not** say "scientifically validated."
+These anonymized rows are category-level positioning hypotheses, not verified capability comparisons. This evidence base does not establish any individual product's features, validation record, performance, or handling of open-ended handwriting. The current demo does not establish a benchmark or human-review loop; copy will **not** say "scientifically validated."
 
 ## 4. The Solution: Hypothesis → Evidence → Differentiating Probe → Teacher Review
 

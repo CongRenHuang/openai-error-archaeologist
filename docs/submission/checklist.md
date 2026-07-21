@@ -19,7 +19,7 @@ Deadline: **July 22, 2026, 08:00 GMT+8**. Create and save the Devpost draft befo
 - [x] Runnable code began during the submission window; implementation commits start at `82e02e0` on July 22.
 - [x] Production uses OpenAI Responses API, Structured Outputs, `gpt-5.6-luna`, and medium reasoning.
 - [x] SymPy independently checks whether probe predictions are mathematically distinct.
-- [x] Automated checks: 15 backend tests, 3 frontend workflow tests, and production frontend build.
+- [x] Automated checks: 15 backend tests, 4 frontend workflow tests, and production frontend build.
 - [x] Synthetic samples only; no student upload or PII path.
 
 ## Copy-Ready Devpost Fields
@@ -44,7 +44,7 @@ The repository existed before the submission period as planning and research doc
 1. Open the live demo and choose **Negative distribution**.
 2. Click **Examine this mistake**; allow about 20–45 seconds for live analysis.
 3. Confirm the page shows `Live analysis · gpt-5.6-luna`, one observed transition, two hypotheses, and a verified probe.
-4. Copy either displayed **Would predict** expression into **Student response**, then click **Update evidence**.
+4. Click **Use this response** under either displayed **Would predict** expression, then click **Update evidence**.
 5. Confirm the matching hypothesis gains support. Select **Ambiguous handwriting** to see abstention instead of a forced label.
 
 **Limitations**  
@@ -66,4 +66,4 @@ Current demo uses three synthetic samples and disposable SQLite state. It demons
 - [ ] Confirm repository visibility; MIT license is present.
 - [ ] Open live demo and repository in signed-out windows.
 - [ ] Submit before deadline; capture confirmation page and submission timestamp.
-- [ ] Keep Cloud Run and repository accessible through August 5 judging end.
+- [ ] Keep Cloud Run and repository accessible through judging; judging ends August 5 5:00 PM Pacific / August 6 08:00 GMT+8.
