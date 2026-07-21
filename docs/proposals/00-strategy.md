@@ -4,7 +4,7 @@
 > 團隊設定:2 人、每日半職(~4–6 小時/人),總預算 ≈ 80–100 人時
 > 主攻方向:教育/學習
 > 本文件併入原 `index.md` 的賽事事實查核內容(2026-07-14 合併,單一檔案維護)
-> **狀態更新(2026-07-22):** 本 repo 目前仍只有研究與產品設計文件,沒有可執行 app、deployment 或完成的 eval。以下原始競賽時程保留作 audit record,不得視為完成紀錄。
+> **狀態更新(2026-07-22,依 git log 更正):** 本 repo 已有 demo app scaffold 與 diagnosis workflow(見 commit `82e02e0` scaffold demo application、`a0e7123` feat(api) diagnosis workflow、`e912ad3` feat(ui) diagnostic demo flow、`286824a` package submission demo),非僅研究與設計文件。但 deployment 是否上線、eval 是否完成仍待個別查核,不得僅憑此更新視為已完成——實際完成狀態仍以 repo、deployment、eval artifacts 現況為準。以下原始競賽時程保留作 audit record,不得視為完成紀錄。
 
 ## 〇、賽事官方事實(2026-07-14 依 [openai.devpost.com](https://openai.devpost.com/)、[Official Rules](https://openai.devpost.com/rules) 校對)
 
@@ -65,7 +65,7 @@
 - **提供 `/feedback` 的 Codex Session ID**(核心功能主要建置那個 thread 的 session)
 - 若為 plugin/dev tool:另需安裝說明、支援平台、免重建即可測試的方式(demo instance / sandbox / test account)
 - 提交語言須為英文(非英文需附翻譯)
-- **New & Existing 條款**:專案須為 Submission Period 內新建,或既有專案在期間內以 Codex/GPT-5.6 「meaningfully extended」——既有專案**只評期間內新增的工作**,且須提供區分舊作/新作的文件 + 期間內使用 Codex/GPT-5.6 的證據(timestamped Codex session logs、dated commit history)。⚠️ **本 repo 於 7/13 前已存在(純規劃文件、零程式碼),直接適用此條款**:README 須聲明既有內容僅為 planning docs、所有程式碼皆於期間內以 Codex 建置,以 commit history 佐證
+- **New & Existing 條款**:專案須為 Submission Period 內新建,或既有專案在期間內以 Codex/GPT-5.6 「meaningfully extended」——既有專案**只評期間內新增的工作**,且須提供區分舊作/新作的文件 + 期間內使用 Codex/GPT-5.6 的證據(timestamped Codex session logs、dated commit history)。✅ **更正(2026-07-22 依 git log 查核)**:先前誤植「本 repo 於 7/13 前已存在」——實際第一個 commit(`c42e49d` init: First commit.)時間為 **2026-07-14 09:44:19 GMT+8**(換算 PT 為 7/13 18:44),已在 Submission Period(7/14 00:00 GMT+8 起)之內。**全部 repo 內容皆於期間內建置,不適用 New & Existing 條款**,無需區分舊作/新作文件
 - **測試存取須維持到 Judging Period 結束(8/5)**:專案須免費、無限制供 Sponsor/Administrator/評審測試至 8/5,非只到 7/21 截稿
 
 ### 資格限制(新增細節)
@@ -179,6 +179,6 @@ Tracks 公布(2026-07-14 確認:Apps for Your Life / Work & Productivity / Devel
 - [ ] 取得並填入 `/feedback` Codex Session ID(核心功能主要建置 thread)
 - [ ] GTM 一頁(評分③的「credible, specific case」)
 - [ ] 確認團隊/個人資格符合 OpenAI API supported countries 名單
-- [ ] README(英文)聲明 New & Existing:pre-existing repo 僅含 planning docs,程式碼全數為 Submission Period 內 Codex 產出,附 dated commit history 佐證
+- [ ] README(英文)聲明:全部 repo 內容(含首個 commit)皆建於 Submission Period 內,不適用 New & Existing 條款,附 dated commit history(首 commit `c42e49d` 2026-07-14 09:44 GMT+8)佐證
 - [ ] 所有提交材料為英文(影片旁白、Devpost 頁面、README、測試說明)
 - [ ] Vercel deployment 維持可用至 **8/5**(Judging Period 結束),非 7/21
