@@ -275,23 +275,23 @@ git commit -m "feat(api): add diagnosis workflow"
 - Consumes: three Task 3 endpoints.
 - Produces: selection → analysis → probe → evidence-update UI.
 
-- [ ] **Step 1: Define exact TypeScript API contracts**
+- [x] **Step 1: Define exact TypeScript API contracts**
 
 Mirror Pydantic fields for `Sample`, `Candidate`, `Probe`, `AnalysisResult`, and `EvidenceUpdate`. Use discriminated `status` unions so abstention and error states render explicitly.
 
-- [ ] **Step 2: Implement one-component flow**
+- [x] **Step 2: Implement one-component flow**
 
 `App.tsx` loads samples on mount, posts selected sample, renders evidence/candidate cards and verified badge, posts probe response, and offers Reset. Buttons disable while requests run. Errors show correlation ID when present. No router, dashboard, settings, upload, review, or aggregate.
 
-- [ ] **Step 3: Add responsive visual system**
+- [x] **Step 3: Add responsive visual system**
 
 Use warm paper background, dark ink text, restrained rust accent, serif display face with system sans body, visible focus states, and mobile single-column layout. Include copy: “Hypothesis, not verdict”, “Verified with symbolic algebra”, and “System abstained” only in matching states.
 
-- [ ] **Step 4: Build and manually inspect**
+- [x] **Step 4: Build and inspect served HTTP flow**
 
 Run: `npm --prefix frontend run build`
 
-Expected: TypeScript exits `0`; `frontend/dist/index.html` exists.
+Expected: TypeScript exits `0`; `frontend/dist/index.html` exists. Browser automation was unavailable in this environment, so human visual inspection remains part of H4 rehearsal.
 
 - [ ] **Step 5: Commit frontend**
 
