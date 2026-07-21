@@ -208,7 +208,7 @@ git commit -m "feat: add verified algebra fixtures"
 - Consumes: contracts/verifier from Task 2.
 - Produces: three HTTP endpoints and `ModelAdapter.analyze(sample_path) -> AnalysisResult`.
 
-- [ ] **Step 1: Write failing API tests with fake adapter**
+- [x] **Step 1: Write failing API tests with fake adapter**
 
 ```python
 def test_complete_demo_flow(client):
@@ -225,13 +225,13 @@ def test_ambiguous_sample_abstains(client):
     assert response.json()["result"]["status"] == "abstained"
 ```
 
-- [ ] **Step 2: Run tests and confirm app-import failure**
+- [x] **Step 2: Run tests and confirm app-import failure**
 
 Run: `uv run pytest backend/tests/test_api.py backend/tests/test_service.py -v`
 
 Expected: FAIL because `backend.app.main` does not exist.
 
-- [ ] **Step 3: Implement adapters and orchestration**
+- [x] **Step 3: Implement adapters and orchestration**
 
 `FakeModelAdapter` returns fixed valid results and abstains for `ambiguous-input`. `OpenAIModelAdapter` base64-encodes PNG and calls:
 
@@ -251,11 +251,11 @@ response = client.responses.parse(
 
 It detects refusals/missing parsed output and never logs content. `AnalysisService` makes at most two attempts; it saves valid or abstained results and converts repeated verification failure to abstention.
 
-- [ ] **Step 4: Implement disposable repository and endpoints**
+- [x] **Step 4: Implement disposable repository and endpoints**
 
 SQLAlchemy table stores UUID, sample ID, and serialized `AnalysisResult`. `create_all` runs at startup. Unknown sample returns `400`; missing analysis returns `400` with `RESET_REQUIRED`; adapter failure returns `503` with correlation ID. Mount sample images at `/samples`; mount React `dist` only when directory exists.
 
-- [ ] **Step 5: Run backend suite and commit**
+- [x] **Step 5: Run backend suite and commit**
 
 Run: `MODEL_ADAPTER=fake uv run pytest backend/tests -v`
 

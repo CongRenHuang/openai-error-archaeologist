@@ -41,3 +41,9 @@ class EvidenceUpdate(BaseModel):
     ]
     supported_candidate_id: str | None = None
     explanation: str
+
+
+class AnalysisEnvelope(BaseModel):
+    id: str
+    sample_id: str
+    result: AnalysisResult
