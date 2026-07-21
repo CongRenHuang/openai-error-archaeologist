@@ -56,7 +56,7 @@ README.md                            judge setup, architecture, Codex record
 **Interfaces:**
 - Produces: `uv run pytest`, `npm run build`, `Settings`, and ignored local `.env`/SQLite files.
 
-- [ ] **Step 1: Add secret-safe environment files**
+- [x] **Step 1: Add secret-safe environment files**
 
 ```gitignore
 .env
@@ -77,7 +77,7 @@ MODEL_ADAPTER=openai
 DATABASE_URL=sqlite:///./demo.db
 ```
 
-- [ ] **Step 2: Add Python project with exact runtime dependencies**
+- [x] **Step 2: Add Python project with exact runtime dependencies**
 
 ```toml
 [project]
@@ -101,19 +101,19 @@ testpaths = ["backend/tests"]
 pythonpath = ["."]
 ```
 
-- [ ] **Step 3: Add minimal Vite package and proxy configuration**
+- [x] **Step 3: Add minimal Vite package and proxy configuration**
 
 ```json
 {
   "scripts": {"dev": "vite", "build": "tsc -b && vite build"},
-  "dependencies": {"@vitejs/plugin-react": "latest", "vite": "latest", "typescript": "latest", "react": "latest", "react-dom": "latest"},
-  "devDependencies": {"@types/react": "latest", "@types/react-dom": "latest"}
+  "dependencies": {"react": "^19.2.8", "react-dom": "^19.2.8"},
+  "devDependencies": {"@vitejs/plugin-react": "^6.0.3", "vite": "^8.1.5", "typescript": "^7.0.2", "@types/react": "^19.2.17", "@types/react-dom": "^19.2.3"}
 }
 ```
 
 `vite.config.ts` must use `plugins: [react()]`, proxy `/api` to `http://localhost:8000`, and output to `dist`.
 
-- [ ] **Step 4: Resolve environments and verify imports**
+- [x] **Step 4: Resolve environments and verify imports**
 
 Run:
 
