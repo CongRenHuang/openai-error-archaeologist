@@ -7,10 +7,12 @@ This repository contains planning research plus a runnable Error Archaeologist d
 - `backend/app/` contains FastAPI routes, model adapters, SQLite repository, and deterministic SymPy domain logic. Tests live in `backend/tests/`.
 - `frontend/src/` contains React UI and workflow types. Vite builds into `frontend/dist/`.
 - `backend/app/static/samples/` contains synthetic PNG fixtures; regenerate them with `backend/scripts/generate_samples.py`.
-- `docs/proposals/` contains strategy and product evidence. `docs/superpowers/` records approved design and implementation plan.
-- `docs/briefing/` contains briefing notes and rendered reference material.
+- `docs/research/evidence-base.md` contains curated claims, primary-source links, and explicit evidence limits.
+- `docs/development/` contains approved architecture and Codex implementation trace.
+- `docs/submission/checklist.md` contains human submission gates.
+- `pitch-video/` contains demo-video source; treat active media work as user-owned and never stage it incidentally.
 
-Keep new documents in the closest existing directory. Use descriptive, kebab-case filenames, optionally prefixed for ordered proposals, such as `05-new-concept.md`.
+Keep new product evidence in `docs/research/evidence-base.md`; keep implementation decisions in `docs/development/`. Avoid raw model research dumps and generated web captures on `main`.
 
 ## Build, Test, and Development Commands
 
