@@ -6,7 +6,12 @@ import type {
   EvidenceUpdate,
   Sample,
 } from "./types";
-import { phaseForAnalysis, phaseForUpdate, type Phase } from "./workflow";
+import {
+  phaseForAnalysis,
+  phaseForUpdate,
+  responseForCandidate,
+  type Phase,
+} from "./workflow";
 
 async function errorMessage(response: Response): Promise<string> {
   const body = (await response.json().catch(() => ({}))) as ApiErrorBody;
@@ -210,6 +215,16 @@ export default function App() {
                       </div>
                       <h3>{candidate.label}</h3>
                       <p>Would predict <code>{candidate.predicted_answer}</code></p>
+                      {phase === "diagnosis" && (
+                        <button
+                          className="candidate-response"
+                          type="button"
+                          onClick={() => setProbeResponse(responseForCandidate(candidate))}
+                          aria-label={`Use response predicted by hypothesis ${String.fromCharCode(65 + index)}`}
+                        >
+                          Use this response
+                        </button>
+                      )}
                     </article>
                   );
                 })}
