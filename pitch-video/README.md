@@ -1,8 +1,7 @@
 # Error Archaeologist — Pitch Video (Remotion)
 
 Programmable 3-minute pitch video for the OpenAI Build Week Education-track submission.
-**Skeleton stage**: all 7 scenes laid out with correct timing, text, and basic motion, now
-timed to the recorded Amanda voiceover. No illustration polish yet.
+All 7 illustrated scenes are timed to the recorded Amanda voiceover and ready to render.
 
 ## Structure
 
@@ -11,8 +10,7 @@ src/
   theme.ts                 palette, fonts, scene timing table (single source of truth)
   Root.tsx                 registers the "ErrorArchaeologist" composition (1920x1080, 30fps, 5359f)
   Video.tsx                stitches the 7 scenes as <Sequence>s, each with its Amanda VO <Audio>
-  audio/                   raw ElevenLabs (Amanda) VO + audio/trim/ (edge-silence trimmed)
-public/audio/              sceneN.mp3 the render pulls via staticFile()
+public/audio/              retained sceneN.mp3 render assets loaded through staticFile()
   components/
     primitives.tsx         SceneShell, SceneTitle, ArtifactCard, CandidateCard, EvidenceBar, SyntheticTag
     PipelineRail.tsx       the §5 architecture spine, animated as a progress rail
@@ -29,8 +27,8 @@ NARRATION.md         full voiceover transcript (the recorded Amanda VO)
 
 ## Timing (30fps, 5374 frames = 2:59.1, under the 3:00 cap)
 
-Durations are **locked to the recorded Amanda voiceover** (`audio/trim/` edge-silence trimmed,
-then `audio/final/` at atempo 1.05), rounded to frames + 16f tail; 12f gap between scenes.
+Durations are **locked to the recorded Amanda voiceover** in `public/audio/`, rounded to
+frames + 16f tail; 12f gap between scenes.
 Picture follows voice, not the reverse.
 
 | Scene | Start | Dur | Frames | VO |
