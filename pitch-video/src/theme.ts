@@ -6,18 +6,20 @@ export const FPS = 30;
 export const WIDTH = 1920;
 export const HEIGHT = 1080;
 
+// Aligned to the frontend brand (frontend/src/styles.css): archaeology deep-teal
+// base, paper artifacts, oxide accents, warm evidence, teal-soft = verified.
 export const COLORS = {
-  bg: "#0B1020",
-  bgSoft: "#141A2E",
-  parchment: "#EDE6D6",
-  ink: "#1A1D2B",
-  amber: "#F5A623", // evidence highlight
-  teal: "#3DD6C4", // verified / math-checked
-  red: "#E5484D", // error / abstain
-  violet: "#8B7FF5", // candidate A accent
-  textHi: "#F4F6FB",
-  textLo: "#9AA3B8",
-  line: "#2A3350",
+  bg: "#0E3238", // frontend --brand-deep
+  bgSoft: "#123A40",
+  parchment: "#F6F0E4", // frontend --brand-paper
+  ink: "#17272B", // frontend --ink (text on paper)
+  amber: "#E7A76D", // frontend --warm : evidence highlight
+  teal: "#9AD0C6", // frontend --teal-soft : verified / math-checked
+  red: "#BA3B1F", // frontend --brand-oxide : error / abstain
+  violet: "#BA3B1F", // frontend --brand-oxide : candidate A accent
+  textHi: "#F6F0E4",
+  textLo: "#9FB0AC",
+  line: "#23484D",
 } as const;
 
 export const FONT = {
