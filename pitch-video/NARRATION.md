@@ -1,7 +1,7 @@
 # Error Archaeologist — Narration Transcript
 
 Voiceover script for the ≤3-minute demo video. Timecodes match the **recorded Amanda VO**
-(`audio/trim/sceneN.mp3`) and `src/theme.ts` (30fps). Total runtime **2:59.4**.
+(`public/audio/sceneN.mp3`) and `src/theme.ts` (30fps). Total runtime **2:59.4**.
 
 > **Submission requirement met here:** Scene 6 narration explicitly explains how **Codex** and
 > **GPT-5.6** were used (maps to judging criteria ① and ④). Do not cut Scene 6.
@@ -47,7 +47,7 @@ Designed in Taiwan from traceable U.S. public evidence. Here's the principle: A.
 
 ## Word budget check
 
-Durations below are the **recorded** Amanda VO (edge-silence trimmed), not the plan.
+Durations below are the retained **recorded** Amanda VO assets, not the plan.
 
 | Scene | Dur | Words | wps |
 |---|---|---|---|
@@ -64,8 +64,8 @@ Video runtime with 12f inter-scene gaps + tails = **5381 frames = 2:59.4** (< 3:
 
 ## Recording notes
 
-- VO is recorded; scene durations in `theme.ts` are locked to these files, so picture
-  follows voice. To re-time, re-trim the mp3 and update the matching `SCENES.sN.dur`.
+- VO is recorded; scene durations in `theme.ts` are locked to `public/audio/`, so picture
+  follows voice. To re-time, replace the relevant mp3 and update matching `SCENES.sN.dur`.
 - Total is 1.4s under the 3:00 cap — no room to lengthen without trimming elsewhere.
 - Other submission items live outside this file: track selection, text description, repo license,
   README Codex-collaboration section, Codex Session ID via `/feedback`, and testing access kept
